@@ -1,0 +1,33 @@
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.deps.json
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.dll
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.pdb
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.AssemblyReference.cache
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\PluginInfo.cs
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.AssemblyInfoInputs.cache
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.AssemblyInfo.cs
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.CoreCompileInputs.cache
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.dll
+C:\Users\enzod\Desktop\Breachers RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.pdb
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.deps.json
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\API.pdb
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.AssemblyReference.cache
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\PluginInfo.cs
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.AssemblyInfoInputs.cache
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.AssemblyInfo.cs
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.CoreCompileInputs.cache
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.pdb
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\Breachers.Scripts.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\com.triangle-factory.loca.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\com.triangle-factory.core.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\TriangleFactory.UI.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\com.triangle-factory.arwc.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\BehaviorDesigner.Runtime.dll
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\bin\Debug\netstandard2.1\Breachers.Friends.dll
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\Debug\netstandard2.1\API.deps.json
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\Debug\netstandard2.1\API.dll
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\Debug\netstandard2.1\API.pdb
+C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.CopyComplete
