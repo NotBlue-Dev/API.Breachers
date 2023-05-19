@@ -1,69 +1,67 @@
-﻿
-using API.DTOS;
+﻿using API.DTOS;
 using API.Networking;
 using API.ObjectData;
-using API.patches;
+using API.Patches;
 using BepInEx;
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections.Generic;
+using MethodBase = System.Reflection.MethodBase;
 
-namespace API
-{
+namespace API {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    public class Plugin : BasePlugin
-    {
-        internal static RootDTO rootDTO;
+    public class Plugin : BasePlugin {
+        internal static RootDTO RootDTO;
         internal static ObjManager objManager;
-        internal static new ManualLogSource Log;
+        internal new static ManualLogSource Log;
         private readonly Server server;
 
-        public Plugin()
-        {
-            rootDTO = new RootDTO();
+        public Plugin() {
             server = new Server();
             objManager = new ObjManager();
-            rootDTO.Teams = new List<TeamDTO>();
-            rootDTO.LastKill = new LastKillDTO();
-
-            TeamDTO Enforcers = new()
-            {
-                Team = "Enforcers",
-                Stats = new StatsDTO(),
-                Players = new List<PlayerDTO>()
+            
+            RootDTO = new RootDTO {
+                Teams = new List<TeamDTO>() {
+                    new TeamDTO() {
+                        Team = "Enforcers",
+                        Stats = new StatsDTO(),
+                        Players = new List<PlayerDTO>()
+                    },
+                    new TeamDTO() {
+                        Team = "Revolters",
+                        Stats = new StatsDTO(),
+                        Players = new List<PlayerDTO>()
+                    }
+                },
+                LastKill = new LastKillDTO()
             };
-            rootDTO.Teams.Add(Enforcers);
-
-            TeamDTO Revolters = new()
-            {
-                Team = "Revolters",
-                Stats = new StatsDTO(),
-                Players = new List<PlayerDTO>()
-            };
-
-            rootDTO.Teams.Add(Revolters);
-
         }
-        public override void Load()
-        {
-           
-  
-            Log.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+        
+        /// <summary>
+        /// Chargement du plugin dans le jeu
+        /// </summary>
+        public override void Load() {
+            Log = base.Log;
+            Log.LogInfo($"[BreachersAPI] - Plugin {PluginInfo.PLUGIN_GUID} is loaded successfully!");
 
             server.CreateAndStartServer();
 
-            Harmony.CreateAndPatchAll(typeof(Update));
+            Harmony.CreateAndPatchAll(typeof(GamePatch));
+            Harmony.CreateAndPatchAll(typeof(PlayerPatch));
 
-            var originalMethods = Harmony.GetAllPatchedMethods();
-            foreach (var method in originalMethods) { Log.LogInfo("TOUT LES HOOK : " + method);  }
+            // Affichage de toutes les méthodes qu'on a patché
+            foreach (MethodBase method in Harmony.GetAllPatchedMethods()) {
+                Log.LogInfo($"[BreachersAPI] - Hook: {method.Name}");
+            }
         }
 
-        public override bool Unload()
-        {
+        /// <summary>
+        /// Déchargement du plugin dans le jeu
+        /// </summary>
+        public override bool Unload() {
             server.CloseServer();
             return false;
         }
-
     }
 }

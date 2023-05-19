@@ -31,3 +31,15 @@ C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plu
 C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\Debug\netstandard2.1\API.dll
 C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\Debug\netstandard2.1\API.pdb
 C:\Users\enzod\Desktop\Breachers_RE\VS\bepplugin\API\obj\Debug\netstandard2.1\API.csproj.CopyComplete
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\netstandard2.1\API.deps.json
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\netstandard2.1\API.dll
+C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\netstandard2.1\API.pdb
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.csproj.AssemblyReference.cache
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\PluginInfo.cs
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.AssemblyInfoInputs.cache
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.AssemblyInfo.cs
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.csproj.CoreCompileInputs.cache
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.csproj.CopyComplete
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.dll
+D:\Users\thiba\Videos\Breachers\API.Breachers\obj\Debug\netstandard2.1\API.pdb

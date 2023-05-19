@@ -1,45 +1,37 @@
 ﻿using System.Text;
 using System.Net;
 using System.Threading;
-using API.DTOS;
 using System.Text.Json;
 
-namespace API.Networking
-{
-    public class Server
-    {
+namespace API.Networking {
+    public class Server {
+        private const string API_URL = "http://localhost:7821/";
         private readonly HttpListener listener;
         private Thread serverThread;
 
-        public Server()
-        {
+        public Server() {
             listener = new HttpListener();
             serverThread = null;
         }
 
-        public void CreateAndStartServer()
-        {
-            listener.Prefixes.Add("http://localhost:7821/");
+        public void CreateAndStartServer() {
+            listener.Prefixes.Add(API_URL);
             listener.Start();
 
-            Plugin.Log.LogInfo("Listener started. waiting for requests...");
+            Plugin.Log.LogInfo($"[BreachersAPI] - Listener started. Waiting for requests on {API_URL}");
 
-            serverThread = new(() =>
-            {
-                while (true)
-                {
+            serverThread = new Thread(() => {
+                while (true) {
                     HttpListenerContext context = listener.GetContext();
 
-                    ThreadPool.QueueUserWorkItem((state) =>
-                    {
+                    ThreadPool.QueueUserWorkItem((state) => {
                         HttpListenerRequest request = context.Request;
                         HttpListenerResponse response = context.Response;
 
-                        if (request.HttpMethod == "GET")
-                        {
+                        if (request.HttpMethod == "GET") {
                             response.StatusCode = 200;
                             response.ContentType = "application/json";
-                            string json = JsonSerializer.Serialize(Plugin.rootDTO);
+                            string json = JsonSerializer.Serialize(Plugin.RootDTO);
                             byte[] buffer = Encoding.UTF8.GetBytes(json);
                             System.IO.Stream output = response.OutputStream;
                             output.Write(buffer, 0, buffer.Length);
@@ -50,20 +42,19 @@ namespace API.Networking
             });
 
             serverThread.Start();
-            Plugin.Log.LogInfo("Server started.");
+            Plugin.Log.LogInfo("[BreachersAPI] - Server started");
         }
 
-        public void CloseServer()
-        {
+        public void CloseServer() {
             listener.Stop();
-            if(serverThread != null)
-            {
+            
+            if(serverThread != null) {
                 serverThread.Join();
-            } else
-            {
-                Plugin.Log.LogInfo("No threaded server running");
+            } else {
+                Plugin.Log.LogInfo("[BreachersAPI] - No threaded server running");
             }
-            Plugin.Log.LogInfo("Server closed");
+            
+            Plugin.Log.LogInfo("[BreachersAPI] - Server stopped");
         }
     }
 }

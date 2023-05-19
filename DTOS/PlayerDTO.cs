@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace API.DTOS
-{
-    public class PlayerDTO
-    {
+namespace API.DTOS {
+    public class PlayerDTO {
         public string Name { get; set; }
         public int Score { get; set; }
         public string IdTag { get; set; }

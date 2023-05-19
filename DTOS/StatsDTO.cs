@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace API.DTOS
-{
-    public class StatsDTO
-    {
+﻿namespace API.DTOS {
+    public class StatsDTO {
         public int Assists { get; set; }
         public int Deaths { get; set; }
         public int Defuses { get; set; }

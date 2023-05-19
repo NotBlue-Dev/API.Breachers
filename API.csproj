@@ -10,6 +10,14 @@
     <BaseOutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins</BaseOutputPath>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />

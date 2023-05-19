@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace API.DTOS
-{
-    public class KillerDTO
-    {
+﻿namespace API.DTOS {
+    public class KillerDTO {
         public string Name { get; set; }
         public string Weapon { get; set; }
         public string Team { get; set; }
@@ -16,5 +10,4 @@ namespace API.DTOS
         public bool IsBot { get; set; }
         public bool IsControllingBot { get; set; }
     }
-
 }
