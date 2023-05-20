@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BreachersAPI.DTOS;
 using BreachersAPI.Utils;
 using Breachers;
+using Breachers.Networking;
+using BreachersAPI.DTOS.Utils;
 using Fusion;
 using HarmonyLib;
 
@@ -32,28 +33,6 @@ public class PlayerPatch {
         }
     }
     
-    // ////// //
-    // STATUS //
-    // ////// //
-    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnPlayerStateChanged))]
-    [HarmonyPostfix]
-    public static void NetCharacter_OnPlayerStateChanged([HarmonyArgument(index:0)] Changed<NetCharacter> arg) {
-        try {
-            NetCharacter player = arg.Behaviour;
-            
-            List<PlayerDTO> players = Plugin.RootDTO.Teams.SelectMany(team => team.Players).ToList();
-            PlayerDTO existingPlayer = players.FirstOrDefault(p => p.Name == player.NET_Nickname);
-            
-            // Si on a bien le joueur dans notre liste des joueurs, on met à jour sa vie
-            if (existingPlayer != null) {
-                existingPlayer.IsDead = player.NET_PlayerState != NetCharacter.PlayerState.Alive;
-            }
-        } catch (Exception ex) {
-            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnPlayerStateChanged");
-            Plugin.Log.LogError($"Error while getting data: {ex}");
-        }
-    }
-    
     // //////////// //
     // TEAM CHANGED //
     // //////////// //
@@ -68,7 +47,7 @@ public class PlayerPatch {
             // Si on a bien le joueur dans notre liste des joueurs
             if (existingPlayer != null) {
                 // On récupère la nouvelle team du joueur
-                TeamDTO newTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == playerTeam.ToString());
+                TeamDTO newTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == playerTeam);
                 if (newTeam.HasValue()) {
                     // Si le joueur n'est pas dans la team, on le rajoute et on le supprime de l'ancienne team
                     if (!newTeam.Players.FirstOrDefault(p => p.Name == playerName).HasValue()) {
@@ -81,6 +60,41 @@ public class PlayerPatch {
             }
         } catch (Exception ex) {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnCurrentTeamChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ///////////// //
+    // GLOBAL UPDATE //
+    // ///////////// //
+    [HarmonyPatch(typeof(SpectatorActivePlayerStatus), nameof(SpectatorActivePlayerStatus.OnSyncedDataChanged))]
+    [HarmonyPostfix]
+    public static void SpectatorActivePlayerStatus_OnSyncedDataChanged(NetGameData netGameData) {
+        // Déclenché lors d'un Player Leave/Join ou Mort (entre autres, aussi Credit change, Grappin?, Drone?, etc.)
+        try {
+            Plugin.RootDTO.ServerName = netGameData.NET_ServerName.ToString();
+            Plugin.RootDTO.ServerOwner = netGameData.NET_ServerOwner.ToString();
+            Plugin.RootDTO.SpectatorCount = netGameData.NET_SpectatorCount;
+            Plugin.RootDTO.Map = netGameData.NET_ActiveSceneName.ToString();
+            Plugin.RootDTO.PrivateServer = netGameData.NET_HasPassword;
+            Plugin.RootDTO.ServerIsLocked = netGameData.NET_IsLocked;
+            Plugin.RootDTO.PlayerCount = netGameData.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
+
+            foreach (PlayerSyncData playerData in netGameData.SyncedPlayerGameData) {
+                TeamDTO team = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == playerData.Team);
+                if (team.HasValue()) {
+                    PlayerDTO player = team.Players.FirstOrDefault(p => p.Name == playerData.Name.ToString());
+                    if (player.HasValue()) {
+                        player.SetInfos(playerData);
+                    } else {
+                        PlayerDTO newPlayer = new PlayerDTO();
+                        newPlayer.SetInfos(playerData);
+                        team.Players.Add(newPlayer);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"PlayerPatch@SpectatorActivePlayerStatus_OnSyncedDataChanged");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }

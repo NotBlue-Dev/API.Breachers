@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BreachersAPI.DTOS {
     public class RootDTO {
@@ -13,6 +14,7 @@ namespace BreachersAPI.DTOS {
         public int PlayerCount { get; set; }
         public string GameStatus { get; set; }
         public float RoundTimer { get; set; }
+        public string RoundTimer_Display => TimeSpan.FromSeconds(RoundTimer).ToString(@"mm\:ss");
         public string EMPTimer { get; set; }
         public int TotalRoundCount { get; set; }
         public int BlueRoundWon { get; set; }

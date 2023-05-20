@@ -7,6 +7,7 @@ using BepInEx.IL2CPP;
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections.Generic;
+using Breachers;
 using MethodBase = System.Reflection.MethodBase;
 
 namespace BreachersAPI {
@@ -24,12 +25,12 @@ namespace BreachersAPI {
             RootDTO = new RootDTO {
                 Teams = new List<TeamDTO>() {
                     new TeamDTO() {
-                        Team = "Enforcers",
+                        Team = Teams.Enforcers,
                         Stats = new StatsDTO(),
                         Players = new List<PlayerDTO>()
                     },
                     new TeamDTO() {
-                        Team = "Revolters",
+                        Team = Teams.Revolters,
                         Stats = new StatsDTO(),
                         Players = new List<PlayerDTO>()
                     }

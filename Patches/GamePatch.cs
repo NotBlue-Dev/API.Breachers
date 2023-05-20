@@ -4,7 +4,6 @@ using BreachersAPI.DTOS;
 using BreachersAPI.DTOS.Utils;
 using BreachersAPI.Utils;
 using Breachers.FX;
-using Breachers.GameModes;
 using Breachers.Networking;
 using HarmonyLib;
 
@@ -25,10 +24,11 @@ public class GamePatch {
             Plugin.RootDTO.PrivateServer = __instance.NET_HasPassword;
             Plugin.RootDTO.Map = __instance.NET_ActiveSceneName.ToString();
             Plugin.RootDTO.SpectatorCount = __instance.NET_SpectatorCount;
+            Plugin.RootDTO.PlayerCount = __instance.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
 
             // Recherche des joueurs
             foreach (PlayerSyncData player in __instance.SyncedPlayerGameData) {
-                TeamDTO team = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == player.Team.ToString());
+                TeamDTO team = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == player.Team);
                 if (team.HasValue()) {
                     PlayerDTO playerDTO = team.Players.FirstOrDefault(p => p.Name == player.Name);
                     // Si on a déjà le joueur, on le met à jour, sinon on le créé
@@ -98,20 +98,6 @@ public class GamePatch {
         try {
             Plugin.RootDTO.Ping = __instance._ping.time;
             Plugin.RootDTO.ServerIP = __instance._ipAddress;
-        } catch (Exception ex) {
-            Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
-            Plugin.Log.LogError($"Error while getting data: {ex}");
-        }
-    }
-    
-    // /////////// //
-    // PLAYER LEFT //
-    // /////////// //
-    [HarmonyPatch(typeof(Match), nameof(Match.OnPlayerLeft))]
-    [HarmonyPostfix]
-    public static void Match_OnPlayerLeft(Match __instance) {
-        try {
-            Plugin.Log.LogInfo($"OnPlayerLeft");
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
             Plugin.Log.LogError($"Error while getting data: {ex}");
