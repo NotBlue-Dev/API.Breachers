@@ -1,6 +1,6 @@
 ﻿using Breachers.Networking;
 
-namespace API.DTOS.Utils; 
+namespace BreachersAPI.DTOS.Utils; 
 
 public static class PlayerDTOUtils {
     

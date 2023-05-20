@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace API.DTOS {
+namespace BreachersAPI.DTOS {
     public class PlayerDTO {
         public string Name { get; set; }
         public int Score { get; set; }

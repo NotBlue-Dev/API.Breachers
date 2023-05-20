@@ -1,4 +1,4 @@
-﻿namespace API.Utils; 
+﻿namespace BreachersAPI.Utils; 
 
 public static class Extensions {
     public static bool HasValue(this string str) {

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using API.DTOS;
-using API.Utils;
+using BreachersAPI.DTOS;
+using BreachersAPI.Utils;
 using Breachers;
 using Fusion;
 using HarmonyLib;
 
-namespace API.Patches; 
+namespace BreachersAPI.Patches; 
 
 public class PlayerPatch {
     
@@ -27,8 +27,8 @@ public class PlayerPatch {
                 existingPlayer.Health = player.NET_Health;
             }
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - PlayerPatch@NetCharacter_OnHealthChanged");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnHealthChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -47,11 +47,10 @@ public class PlayerPatch {
             // Si on a bien le joueur dans notre liste des joueurs, on met à jour sa vie
             if (existingPlayer != null) {
                 existingPlayer.IsDead = player.NET_PlayerState != NetCharacter.PlayerState.Alive;
-                Plugin.Log.LogInfo($"[BreachersAPI] - {player.NET_Nickname} is {(player.NET_PlayerState == NetCharacter.PlayerState.Alive ? "Alive" : "Dead")}");
             }
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - PlayerPatch@NetCharacter_OnPlayerStateChanged");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnPlayerStateChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -81,8 +80,8 @@ public class PlayerPatch {
                 }
             }
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - PlayerPatch@NetCharacter_OnCurrentTeamChanged");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnCurrentTeamChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
 }

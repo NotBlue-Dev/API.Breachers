@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace API.DTOS {
+namespace BreachersAPI.DTOS {
     public class LhandDTO {
         public List<double> Pos { get; set; }
         public List<double> Forward { get; set; }

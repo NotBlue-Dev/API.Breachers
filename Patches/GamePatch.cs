@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Linq;
-using API.DTOS;
-using API.DTOS.Utils;
-using API.Utils;
+using BreachersAPI.DTOS;
+using BreachersAPI.DTOS.Utils;
+using BreachersAPI.Utils;
 using Breachers.FX;
 using Breachers.GameModes;
 using Breachers.Networking;
 using HarmonyLib;
 
-namespace API.Patches; 
+namespace BreachersAPI.Patches; 
 
 public class GamePatch {
     
@@ -42,8 +42,8 @@ public class GamePatch {
                 }
             }
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@NetGameData_Spawned");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@NetGameData_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -56,8 +56,8 @@ public class GamePatch {
         try {
             Plugin.RootDTO.MatchType = __instance.NET_MatchType.ToString();
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@NetVoiceHandler_Spawned");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -70,8 +70,8 @@ public class GamePatch {
         try {
             Plugin.RootDTO.RoundTimer = __instance._lastTimeInSeconds;
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@SimpleClock_SetTime");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@SimpleClock_SetTime");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -84,8 +84,8 @@ public class GamePatch {
         try {
             Plugin.RootDTO.PacketLoss = __instance._packetLossMeasureDelay;       
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@ClientConnectionInfo_FixedUpdateNetwork");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@ClientConnectionInfo_FixedUpdateNetwork");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -99,8 +99,8 @@ public class GamePatch {
             Plugin.RootDTO.Ping = __instance._ping.time;
             Plugin.RootDTO.ServerIP = __instance._ipAddress;
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@ServerPing_Refresh");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
     
@@ -111,10 +111,10 @@ public class GamePatch {
     [HarmonyPostfix]
     public static void Match_OnPlayerLeft(Match __instance) {
         try {
-            Plugin.Log.LogInfo($"[BreachersAPI] - OnPlayerLeft");
+            Plugin.Log.LogInfo($"OnPlayerLeft");
         } catch (Exception ex) {
-            Plugin.Log.LogError($"[BreachersAPI] - GamePatch@ServerPing_Refresh");
-            Plugin.Log.LogError($"[BreachersAPI] - Error while getting data: {ex}");
+            Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
 }

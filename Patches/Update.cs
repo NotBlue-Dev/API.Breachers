@@ -1,6 +1,6 @@
 ﻿using System;
-using API.DTOS;
-using API.DTOS.Utils;
+using BreachersAPI.DTOS;
+using BreachersAPI.DTOS.Utils;
 using Breachers;
 using Breachers.Networking;
 using HarmonyLib;
@@ -8,7 +8,7 @@ using Breachers.FX;
 using Breachers.GameModes;
 using Fusion;
 
-namespace API.Patches
+namespace BreachersAPI.Patches
 {
 
     //TO DO EVENT AU LIEU DE MODIFIER DANS LE PATCH

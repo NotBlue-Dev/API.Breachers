@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace API.DTOS {
+namespace BreachersAPI.DTOS {
     public class RootDTO {
         public string ServerName { get; set; }
         public string ServerOwner { get; set; }

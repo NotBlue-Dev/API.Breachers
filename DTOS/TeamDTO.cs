@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace API.DTOS {
+namespace BreachersAPI.DTOS {
     public class TeamDTO {
         public string Team { get; set; }
         public StatsDTO Stats { get; set; }

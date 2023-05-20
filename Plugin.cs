@@ -1,7 +1,7 @@
-﻿using API.DTOS;
-using API.Networking;
-using API.ObjectData;
-using API.Patches;
+﻿using BreachersAPI.DTOS;
+using BreachersAPI.Networking;
+using BreachersAPI.ObjectData;
+using BreachersAPI.Patches;
 using BepInEx;
 using BepInEx.IL2CPP;
 using BepInEx.Logging;
@@ -9,7 +9,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using MethodBase = System.Reflection.MethodBase;
 
-namespace API {
+namespace BreachersAPI {
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
     public class Plugin : BasePlugin {
         internal static RootDTO RootDTO;
@@ -43,7 +43,7 @@ namespace API {
         /// </summary>
         public override void Load() {
             Log = base.Log;
-            Log.LogInfo($"[BreachersAPI] - Plugin {PluginInfo.PLUGIN_GUID} is loaded successfully!");
+            Log.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded successfully!");
 
             server.CreateAndStartServer();
 
@@ -52,7 +52,7 @@ namespace API {
 
             // Affichage de toutes les méthodes qu'on a patché
             foreach (MethodBase method in Harmony.GetAllPatchedMethods()) {
-                Log.LogInfo($"[BreachersAPI] - Hook: {method.Name}");
+                Log.LogInfo($"Hook: {method.Name}");
             }
         }
 

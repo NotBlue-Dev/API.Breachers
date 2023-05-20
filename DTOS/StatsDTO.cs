@@ -1,4 +1,4 @@
-﻿namespace API.DTOS {
+﻿namespace BreachersAPI.DTOS {
     public class StatsDTO {
         public int Assists { get; set; }
         public int Deaths { get; set; }

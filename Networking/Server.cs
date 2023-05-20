@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Text.Json;
 
-namespace API.Networking {
+namespace BreachersAPI.Networking {
     public class Server {
         private const string API_URL = "http://localhost:7821/";
         private readonly HttpListener listener;
@@ -18,7 +18,7 @@ namespace API.Networking {
             listener.Prefixes.Add(API_URL);
             listener.Start();
 
-            Plugin.Log.LogInfo($"[BreachersAPI] - Listener started. Waiting for requests on {API_URL}");
+            Plugin.Log.LogInfo($"Listener started. Waiting for requests on {API_URL}");
 
             serverThread = new Thread(() => {
                 while (true) {
@@ -42,7 +42,7 @@ namespace API.Networking {
             });
 
             serverThread.Start();
-            Plugin.Log.LogInfo("[BreachersAPI] - Server started");
+            Plugin.Log.LogInfo("Server started");
         }
 
         public void CloseServer() {
@@ -51,10 +51,10 @@ namespace API.Networking {
             if(serverThread != null) {
                 serverThread.Join();
             } else {
-                Plugin.Log.LogInfo("[BreachersAPI] - No threaded server running");
+                Plugin.Log.LogInfo("No threaded server running");
             }
             
-            Plugin.Log.LogInfo("[BreachersAPI] - Server stopped");
+            Plugin.Log.LogInfo("Server stopped");
         }
     }
 }
