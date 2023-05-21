@@ -99,7 +99,7 @@ public class GamePatch {
     [HarmonyPostfix]
     public static void ServerPing_Refresh(ServerPing __instance) {
         try {
-            Plugin.RootDTO.Ping = __instance._ping.time;
+            Plugin.RootDTO.ServerIP = __instance._ipAddress;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
             Plugin.Log.LogError($"Error while getting data: {ex}");

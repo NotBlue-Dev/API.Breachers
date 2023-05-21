@@ -12,9 +12,6 @@ namespace BreachersAPI.Patches;
 
 public class PlayerPatch {
     
-    //TO DO, recup les valeurs des netcharacter on spawn (la t'arrive dans une game avec un mec a 50 de vie
-    //ca affiche 100 tant qu'il est pas update
-    
     // ////// //
     // HEALTH //
     // ////// //
@@ -37,29 +34,38 @@ public class PlayerPatch {
     }
     
     // /////// //
+    //  SPAWN  //
+    // /////// //
+    // Quand on spawn on met à jour la vie du joueur (car pas update pas SyncedPlayerGameData)
+    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.Spawned))]
+    [HarmonyPostfix]
+    public static void NetCharacter_Spawned(NetCharacter __instance) {
+        try {
+            string playerName = __instance.NET_Nickname;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players).FirstOrDefault(p => p.Name == playerName);
+            if (existingPlayer != null) {
+                existingPlayer.Health = __instance.NET_Health;
+            }
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // /////// //
     // DESPAWN //
     // /////// //
-    // Quand on quitte une game on vide le DTO players et TEAM
-    // Quand un player leave ca despawn pas son netcharacter est remplacer par un bot
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.Despawned))]
     [HarmonyPostfix]
     public static void NetCharacter_Despawned(NetCharacter __instance) {
         try {
-            string playerName = __instance.NET_Nickname;
-            Teams playerTeam = __instance.NET_CurrentTeam;
+            //for each team in the list of teams
+            foreach (TeamDTO team in Plugin.RootDTO.Teams) {
+                team.Stats = new StatsDTO();
+                team.Players.Clear();
+            }
             
-            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
-                .FirstOrDefault(p => p.Name == playerName);
-            TeamDTO currentTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == playerTeam);
-
-            if (existingPlayer != null) {
-                currentTeam?.Players.Remove(existingPlayer);
-            }
-
-            if (currentTeam?.Players.Count == 0)
-            {
-                currentTeam.Stats = new StatsDTO();
-            }
         } catch (Exception ex) {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_Despawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
@@ -78,7 +84,6 @@ public class PlayerPatch {
             
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
                 .FirstOrDefault(p => p.Name == playerName);
-            Plugin.Log.LogInfo(existingPlayer + playerName);
             if (existingPlayer != null)
             {
                 existingPlayer.FootStepCounter = player.NET_FootStepCounter;
