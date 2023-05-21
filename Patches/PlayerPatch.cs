@@ -12,6 +12,9 @@ namespace BreachersAPI.Patches;
 
 public class PlayerPatch {
     
+    //TO DO, recup les valeurs des netcharacter on spawn (la t'arrive dans une game avec un mec a 50 de vie
+    //ca affiche 100 tant qu'il est pas update
+    
     // ////// //
     // HEALTH //
     // ////// //
@@ -55,8 +58,7 @@ public class PlayerPatch {
 
             if (currentTeam?.Players.Count == 0)
             {
-                Plugin.RootDTO.Teams.Remove(currentTeam);
-                Plugin.RootDTO.Teams.Add(new TeamDTO());
+                currentTeam.Stats = new StatsDTO();
             }
         } catch (Exception ex) {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_Despawned");
@@ -73,9 +75,10 @@ public class PlayerPatch {
         try {
             NetCharacter player = arg.Behaviour;
             string playerName = player.NET_Nickname;
-
+            
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
                 .FirstOrDefault(p => p.Name == playerName);
+            Plugin.Log.LogInfo(existingPlayer + playerName);
             if (existingPlayer != null)
             {
                 existingPlayer.FootStepCounter = player.NET_FootStepCounter;
