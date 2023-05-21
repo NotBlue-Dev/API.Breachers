@@ -4,7 +4,10 @@ using BreachersAPI.DTOS;
 using BreachersAPI.DTOS.Utils;
 using BreachersAPI.Utils;
 using Breachers.FX;
+using Breachers.GameModes;
+using Breachers.GameModes.BombDefusal;
 using Breachers.Networking;
+using Fusion;
 using HarmonyLib;
 
 namespace BreachersAPI.Patches; 
@@ -56,6 +59,43 @@ public class GamePatch {
     public static void NetVoiceHandler_Spawned(NetVoiceHandler __instance) {
         try {
             Plugin.RootDTO.MatchType = __instance.NET_MatchType.ToString();
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////////////// //
+    // BOMB DEFUSAL STATE //
+    // ////////////////// //
+    [HarmonyPatch(typeof(BombDefusalMatch), nameof(BombDefusalMatch.OnCurrentStateChanged))]
+    [HarmonyPostfix]
+    public static void NetVoiceHandler_OnCurrentStateChanged(Changed<BombDefusalMatch> arg) {
+        try
+        {
+            BombDefusalMatch bombDefusal = arg.Behaviour;
+            Plugin.RootDTO.GameStatusBombDefusalState = bombDefusal.NET_CurrentState;
+            Plugin.RootDTO.CurrentRound = bombDefusal._NET_CurrentRound;
+            Plugin.RootDTO.RoundBeforeSwap = bombDefusal._roundsBeforeSwap;
+            Plugin.RootDTO.RoundEndReasonBombDefusalState = bombDefusal.NET_RoundEndReason;
+            Plugin.RootDTO.RoundWinner = bombDefusal.NET_RoundWinner;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////////////// //
+    // BOMB DEFUSAL STATE //
+    // ////////////////// //
+    [HarmonyPatch(typeof(TeamDeathMatch), nameof(TeamDeathMatch.OnClientStateChanged))]
+    [HarmonyPostfix]
+    public static void NetVoiceHandler_OnCurrentStateChanged(Changed<TeamDeathMatch> arg) {
+        try
+        {
+            TeamDeathMatch deathMatch = arg.Behaviour;
+            Plugin.RootDTO.GameStatusDeathMatch = deathMatch.NET_CurrentState;
+            Plugin.RootDTO.RoundWinner = deathMatch.NET_RoundWinner;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
