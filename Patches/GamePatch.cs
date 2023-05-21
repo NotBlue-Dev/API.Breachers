@@ -39,6 +39,7 @@ public class GamePatch {
                         newPlayer.SetInfos(player);
                         team.Players.Add(newPlayer);
                     }
+                    team.SetTeamStats();
                 }
             }
         } catch (Exception ex) {
@@ -81,8 +82,9 @@ public class GamePatch {
     [HarmonyPatch(typeof(ClientConnectionInfo), nameof(ClientConnectionInfo.FixedUpdateNetwork))]
     [HarmonyPostfix]
     public static void ClientConnectionInfo_FixedUpdateNetwork(ClientConnectionInfo __instance) {
-        try {
-            Plugin.RootDTO.PacketLoss = __instance._packetLossMeasureDelay;       
+        try
+        {
+            Plugin.RootDTO.PacketLoss = __instance._packetLossMeasureDelay;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@ClientConnectionInfo_FixedUpdateNetwork");
             Plugin.Log.LogError($"Error while getting data: {ex}");
@@ -90,14 +92,14 @@ public class GamePatch {
     }
     
     // //////////////// //
-    // PING + SERVER IP //
+    //    SERVER IP     //
     // //////////////// //
+    //Refresh trigger que quand on load la map donc ping doit pas etre recup ici (ou pas avec cette methode)
     [HarmonyPatch(typeof(ServerPing), nameof(ServerPing.Refresh))]
     [HarmonyPostfix]
     public static void ServerPing_Refresh(ServerPing __instance) {
         try {
             Plugin.RootDTO.Ping = __instance._ping.time;
-            Plugin.RootDTO.ServerIP = __instance._ipAddress;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@ServerPing_Refresh");
             Plugin.Log.LogError($"Error while getting data: {ex}");

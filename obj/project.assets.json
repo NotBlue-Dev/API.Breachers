@@ -3180,37 +3180,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\thiba\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\enzod\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Users\\thiba\\Videos\\Breachers\\API.Breachers\\API.csproj",
-      "projectName": "API",
-      "projectPath": "D:\\Users\\thiba\\Videos\\Breachers\\API.Breachers\\API.csproj",
-      "packagesPath": "C:\\Users\\thiba\\.nuget\\packages\\",
-      "outputPath": "D:\\Users\\thiba\\Videos\\Breachers\\API.Breachers\\obj\\",
+      "projectUniqueName": "C:\\Users\\enzod\\Desktop\\Breachers_RE\\VS\\bepplugin\\API\\BreachersAPI.csproj",
+      "projectName": "BreachersAPI",
+      "projectPath": "C:\\Users\\enzod\\Desktop\\Breachers_RE\\VS\\bepplugin\\API\\BreachersAPI.csproj",
+      "packagesPath": "C:\\Users\\enzod\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\enzod\\Desktop\\Breachers_RE\\VS\\bepplugin\\API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "D:\\Users\\thiba\\Videos\\Breachers\\API.Breachers\\NuGet.Config",
-        "C:\\Users\\thiba\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\enzod\\Desktop\\Breachers_RE\\VS\\bepplugin\\API\\NuGet.Config",
+        "C:\\Users\\enzod\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.bepinex.dev/v3/index.json": {},
-        "https://nuget.devexpress.com/xbYTM4HiQjH3yDPjIa3kAIZb9QAiTJqdbGF2u5kVHGumzygAXa/api": {}
+        "https://nuget.bepinex.dev/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.1": {
@@ -3252,7 +3243,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -3261,7 +3253,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
