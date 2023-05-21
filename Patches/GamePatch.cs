@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Breachers;
 using BreachersAPI.DTOS;
 using BreachersAPI.DTOS.Utils;
 using BreachersAPI.Utils;
@@ -28,7 +29,8 @@ public class GamePatch {
             Plugin.RootDTO.Map = __instance.NET_ActiveSceneName.ToString();
             Plugin.RootDTO.SpectatorCount = __instance.NET_SpectatorCount;
             Plugin.RootDTO.PlayerCount = __instance.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
-
+            Plugin.Log.LogInfo(__instance.SyncedTeamGameData.ToString());
+            
             // Recherche des joueurs
             foreach (PlayerSyncData player in __instance.SyncedPlayerGameData) {
                 TeamDTO team = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == player.Team);
@@ -54,11 +56,28 @@ public class GamePatch {
     // ////////// //
     // MATCH TYPE //
     // ////////// //
-    [HarmonyPatch(typeof(NetVoiceHandler), nameof(NetVoiceHandler.Spawned))]
+    [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.OnMatchTypeChanged))]
     [HarmonyPostfix]
-    public static void NetVoiceHandler_Spawned(NetVoiceHandler __instance) {
+    public static void SpectatorScoreDisplay_OnMatchTypeChanged(Match.MatchTypes type) {
         try {
-            Plugin.RootDTO.MatchType = __instance.NET_MatchType.ToString();
+            Plugin.RootDTO.MatchType = type;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////// ///
+    // ROUND SCORE //
+    // ////////// //
+    [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.SetRoundProgress))]
+    [HarmonyPostfix]
+    public static void SpectatorScoreDisplay_SetRoundProgress(SpectatorScoreDisplay __instance) {
+        try {
+            //a finir
+            Plugin.RootDTO.GlobalTimer = __instance._lastSetTimerHash;
+            //y'a moyen de recup round score ici jpense sinon dans netgame data
+
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
@@ -70,12 +89,14 @@ public class GamePatch {
     // ////////////////// //
     [HarmonyPatch(typeof(BombDefusalMatch), nameof(BombDefusalMatch.OnCurrentStateChanged))]
     [HarmonyPostfix]
-    public static void NetVoiceHandler_OnCurrentStateChanged(Changed<BombDefusalMatch> arg) {
+    public static void BombDefusalMatch_OnCurrentStateChanged(Changed<BombDefusalMatch> changed) {
         try
         {
-            BombDefusalMatch bombDefusal = arg.Behaviour;
+            BombDefusalMatch bombDefusal = changed.Behaviour;
             Plugin.RootDTO.GameStatusBombDefusalState = bombDefusal.NET_CurrentState;
+            //current round valeur a partir du moment ou le spec join ?
             Plugin.RootDTO.CurrentRound = bombDefusal._NET_CurrentRound;
+            //la valeur du before swap est chelou, recherche a faire
             Plugin.RootDTO.RoundBeforeSwap = bombDefusal._roundsBeforeSwap;
             Plugin.RootDTO.RoundEndReasonBombDefusalState = bombDefusal.NET_RoundEndReason;
             Plugin.RootDTO.RoundWinner = bombDefusal.NET_RoundWinner;
@@ -86,14 +107,14 @@ public class GamePatch {
     }
     
     // ////////////////// //
-    // BOMB DEFUSAL STATE //
+    //  DEATH MATCH STATE //
     // ////////////////// //
     [HarmonyPatch(typeof(TeamDeathMatch), nameof(TeamDeathMatch.OnClientStateChanged))]
     [HarmonyPostfix]
-    public static void NetVoiceHandler_OnCurrentStateChanged(Changed<TeamDeathMatch> arg) {
+    public static void TeamDeathMatch_OnClientStateChanged(Changed<TeamDeathMatch> changed) {
         try
         {
-            TeamDeathMatch deathMatch = arg.Behaviour;
+            TeamDeathMatch deathMatch = changed.Behaviour;
             Plugin.RootDTO.GameStatusDeathMatch = deathMatch.NET_CurrentState;
             Plugin.RootDTO.RoundWinner = deathMatch.NET_RoundWinner;
         } catch (Exception ex) {

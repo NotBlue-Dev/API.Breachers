@@ -17,9 +17,9 @@ public class PlayerPatch {
     // ////// //
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnHealthChanged))]
     [HarmonyPostfix]
-    public static void NetCharacter_OnHealthChanged([HarmonyArgument(index:0)] Changed<NetCharacter> arg) {
+    public static void NetCharacter_OnHealthChanged(Changed<NetCharacter> changed) {
         try {
-            NetCharacter player = arg.Behaviour;
+            NetCharacter player = changed.Behaviour;
             string playerName = player.NET_Nickname;
 
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players).FirstOrDefault(p => p.Name == playerName);
@@ -59,14 +59,28 @@ public class PlayerPatch {
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.Despawned))]
     [HarmonyPostfix]
     public static void NetCharacter_Despawned(NetCharacter __instance) {
-        try {
-            //for each team in the list of teams
-            foreach (TeamDTO team in Plugin.RootDTO.Teams) {
-                team.Stats = new StatsDTO();
-                team.Players.Clear();
+        try
+        {
+            string playerName = __instance.NET_Nickname;
+            Teams playerTeam = __instance.NET_CurrentTeam;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
+                .FirstOrDefault(p => p.Name == playerName);
+            TeamDTO currentTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == playerTeam);
+
+            if (existingPlayer != null)
+            {
+                currentTeam?.Players.Remove(existingPlayer);
             }
-            
-        } catch (Exception ex) {
+
+            if (currentTeam?.Players.Count == 0)
+            {
+                currentTeam.Stats = new StatsDTO();
+                currentTeam.Players.Clear();
+            }
+        }
+        catch (Exception ex)
+        {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_Despawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
@@ -77,9 +91,9 @@ public class PlayerPatch {
     // ////// // //
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnFootStepCounterChanged))]
     [HarmonyPostfix]
-    public static void NetCharacter_OnFootStepCounterChanged([HarmonyArgument(index:0)] Changed<NetCharacter> arg) {
+    public static void NetCharacter_OnFootStepCounterChanged(Changed<NetCharacter> changed) {
         try {
-            NetCharacter player = arg.Behaviour;
+            NetCharacter player = changed.Behaviour;
             string playerName = player.NET_Nickname;
             
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
@@ -101,9 +115,9 @@ public class PlayerPatch {
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnIsOutsideChanged), typeof(Changed<NetCharacter>))]
     [HarmonyPostfix]
     //methode avec deux fois le meme nom mais une des deux a un arg donc on le passe en params
-    public static void NetCharacter_OnIsOutsideChanged([HarmonyArgument(index:0)] Changed<NetCharacter> arg) {
+    public static void NetCharacter_OnIsOutsideChanged(Changed<NetCharacter> changed) {
         try {
-            NetCharacter player = arg.Behaviour;
+            NetCharacter player = changed.Behaviour;
             string playerName = player.NET_Nickname;
 
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
@@ -124,7 +138,7 @@ public class PlayerPatch {
     // a tester
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnVirtualStockChanged))]
     [HarmonyPostfix]
-    public static void NetCharacter_OnVirtualStockChanged([HarmonyArgument(index:0)] bool arg, NetCharacter __instance) {
+    public static void NetCharacter_OnVirtualStockChanged(bool useVirtualStock, NetCharacter __instance) {
         try {
             string playerName = __instance.NET_Nickname;
 
@@ -132,7 +146,7 @@ public class PlayerPatch {
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
-                existingPlayer.UsingVirtualStock = arg;
+                existingPlayer.UsingVirtualStock = useVirtualStock;
             }
         } catch (Exception ex) {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnVirtualStockChanged");
@@ -145,10 +159,10 @@ public class PlayerPatch {
     // //////////// //
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnCurrentTeamChanged))]
     [HarmonyPostfix]
-    public static void NetCharacter_OnCurrentTeamChanged([HarmonyArgument(index:0)] Changed<NetCharacter> arg) {
+    public static void NetCharacter_OnCurrentTeamChanged(Changed<NetCharacter> changed) {
         try {
-            string playerName = arg.Behaviour.NET_Nickname;
-            Teams playerTeam = arg.Behaviour.NET_CurrentTeam;
+            string playerName = changed.Behaviour.NET_Nickname;
+            Teams playerTeam = changed.Behaviour.NET_CurrentTeam;
             
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players).FirstOrDefault(p => p.Name == playerName);
             // Si on a bien le joueur dans notre liste des joueurs
