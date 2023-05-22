@@ -19,17 +19,10 @@ namespace BreachersAPI.DTOS {
         public TeamDeathMatch.States GameStatusDeathMatch { get; set; }
         public float RoundTimer { get; set; }
         public string RoundTimer_Display => TimeSpan.FromSeconds(RoundTimer).ToString(@"mm\:ss");
-        
         public float GlobalTimer { get; set; }
-        
-        public string EMPTimer { get; set; }
-        
         public int ScoreEnforcers { get; set; }
-        
         public int ScoreRevolters { get; set; }
-        public int RoundBeforeSwap { get; set; }
-        public int CurrentRound { get; set; }
-        public Teams RoundWinner { get; set; }
+        public Teams RoundWinner { get; set; } = Breachers.Teams.None;
         public BombDefusalMatch.RoundEndReason RoundEndReasonBombDefusalState { get; set; }
         public int PacketLoss { get; set; }
         

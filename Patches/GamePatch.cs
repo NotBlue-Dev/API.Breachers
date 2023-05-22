@@ -68,18 +68,31 @@ public class GamePatch {
     }
     
     // ////////// ///
-    // ROUND SCORE //
+    // GLOBAL TIME //
     // ////////// //
     [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.SetRoundProgress))]
     [HarmonyPostfix]
     public static void SpectatorScoreDisplay_SetRoundProgress(SpectatorScoreDisplay __instance) {
         try {
-            //a finir
             Plugin.RootDTO.GlobalTimer = __instance._lastSetTimerHash;
-            //y'a moyen de recup round score ici jpense sinon dans netgame data
-
         } catch (Exception ex) {
-            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"GamePatch@SpectatorScoreDisplay_SetRoundProgress");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // //////////
+    // SCORE  //
+    // /////////
+    [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.UpdateScore))]
+    [HarmonyPostfix]
+    public static void SpectatorScoreDisplay_UpdateScore(NetGameData netGameData) {
+        try
+        {
+            Plugin.RootDTO.ScoreRevolters = netGameData.SyncedTeamGameData[0].Score;
+            Plugin.RootDTO.ScoreEnforcers = netGameData.SyncedTeamGameData[1].Score;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@SpectatorScoreDisplay_SetRoundProgress");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
@@ -94,10 +107,6 @@ public class GamePatch {
         {
             BombDefusalMatch bombDefusal = changed.Behaviour;
             Plugin.RootDTO.GameStatusBombDefusalState = bombDefusal.NET_CurrentState;
-            //current round valeur a partir du moment ou le spec join ?
-            Plugin.RootDTO.CurrentRound = bombDefusal._NET_CurrentRound;
-            //la valeur du before swap est chelou, recherche a faire
-            Plugin.RootDTO.RoundBeforeSwap = bombDefusal._roundsBeforeSwap;
             Plugin.RootDTO.RoundEndReasonBombDefusalState = bombDefusal.NET_RoundEndReason;
             Plugin.RootDTO.RoundWinner = bombDefusal.NET_RoundWinner;
         } catch (Exception ex) {
