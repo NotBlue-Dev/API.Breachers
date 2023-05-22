@@ -25,8 +25,6 @@ namespace BreachersAPI.DTOS {
         public Teams RoundWinner { get; set; } = Breachers.Teams.None;
         public BombDefusalMatch.RoundEndReason RoundEndReasonBombDefusalState { get; set; }
         public int PacketLoss { get; set; }
-        
-        public int Ping { get; set; }
         public LastKillDTO LastKill { get; set; }
         public List<TeamDTO> Teams { get; set; }
     }
