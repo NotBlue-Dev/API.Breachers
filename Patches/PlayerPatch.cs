@@ -132,6 +132,46 @@ public class PlayerPatch {
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
+    
+    // ////// ///// ///
+    // VIRTUAL STOCK //
+    // ////// ///// ///
+    // a tester
+    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnVirtualStockChanged))]
+    [HarmonyPostfix]
+    public static void NetCharacter_OnVirtualStockChanged(NetCharacter __instance) {
+        try {
+            string playerName = __instance.NET_Nickname;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
+                .FirstOrDefault(p => p.Name == playerName);
+            if (existingPlayer != null)
+            {
+                existingPlayer.UsingVirtualStock = __instance.NET_UsingVirtualStock;
+            }
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnVirtualStockChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////
+    // KILL  //
+    // ///////
+    [HarmonyPatch(typeof(NetMessageSender), nameof(NetMessageSender.RPC_DisplaySpectatorKillConfirmationMessage))]
+    [HarmonyPostfix]
+    public static void NetCharacter_RPC_DisplaySpectatorKillConfirmationMessage()
+    {
+        try
+        {
+            //recup les params marche pas
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_RPC_DisplaySpectatorKillConfirmationMessage");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
 
     // //////////// //
     // TEAM CHANGED //

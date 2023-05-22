@@ -22,6 +22,7 @@ namespace BreachersAPI.DTOS {
         public string SecondaryWeapon { get; set; }
         public List<string> Equipments { get; set; }
         public int FootStepCounter { get; set; }
+        public bool UsingVirtualStock { get; set; }
         public StatsDTO Stats { get; set; }
         public List<int> Velocity { get; set; }
         public HeadDTO Head { get; set; }
