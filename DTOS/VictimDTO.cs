@@ -1,9 +1,8 @@
-﻿namespace BreachersAPI.DTOS {
+﻿using Breachers;
+
+namespace BreachersAPI.DTOS {
     public class VictimDTO {
         public string Name { get; set; }
-        public string Weapon { get; set; }
         public string Team { get; set; }
-        public bool IsBot { get; set; }
-        public bool IsControllingBot { get; set; }
     }
 }

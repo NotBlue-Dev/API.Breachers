@@ -3,6 +3,7 @@ using System.Linq;
 using BreachersAPI.DTOS;
 using BreachersAPI.Utils;
 using Breachers;
+using Breachers.GameModes;
 using Breachers.Networking;
 using BreachersAPI.DTOS.Utils;
 using Fusion;
@@ -131,29 +132,7 @@ public class PlayerPatch {
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
-    
-    // ////// ///// ///
-    // VIRTUAL STOCK //
-    // ////// ///// ///
-    // a tester
-    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnVirtualStockChanged))]
-    [HarmonyPostfix]
-    public static void NetCharacter_OnVirtualStockChanged(bool useVirtualStock, NetCharacter __instance) {
-        try {
-            string playerName = __instance.NET_Nickname;
 
-            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
-                .FirstOrDefault(p => p.Name == playerName);
-            if (existingPlayer != null)
-            {
-                existingPlayer.UsingVirtualStock = useVirtualStock;
-            }
-        } catch (Exception ex) {
-            Plugin.Log.LogError($"PlayerPatch@NetCharacter_OnVirtualStockChanged");
-            Plugin.Log.LogError($"Error while getting data: {ex}");
-        }
-    }
-    
     // //////////// //
     // TEAM CHANGED //
     // //////////// //
