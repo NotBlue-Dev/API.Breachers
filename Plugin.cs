@@ -35,7 +35,10 @@ namespace BreachersAPI {
                         Players = new List<PlayerDTO>()
                     }
                 },
-                LastKill = new LastKillDTO()
+                LastKill = new LastKillDTO() {
+                    Killer = new KillerDTO(),
+                    Victim = new VictimDTO()
+                }
             };
         }
         

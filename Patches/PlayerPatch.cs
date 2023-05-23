@@ -160,15 +160,30 @@ public class PlayerPatch {
     // ///////
     [HarmonyPatch(typeof(NetMessageSender), nameof(NetMessageSender.RPC_DisplaySpectatorKillConfirmationMessage))]
     [HarmonyPostfix]
-    public static void NetCharacter_RPC_DisplaySpectatorKillConfirmationMessage()
+    public static void RPC_DisplaySpectatorKillConfirmationMessage(
+        PlayerRef spectator,
+        string killerColorHex,
+        string killerNickname,
+        string victimColorHex,
+        string victimNickname,
+        int usedWeapon,
+        bool isHeadshot,
+        bool isWallBang,
+        bool isSmokeBang,
+        bool isCollat)
     {
-        try
-        {
-            //recup les params marche pas
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.LogError($"PlayerPatch@NetCharacter_RPC_DisplaySpectatorKillConfirmationMessage");
+        try {
+            Plugin.RootDTO.LastKill.Killer.Name = killerNickname;
+            Plugin.RootDTO.LastKill.Killer.Team = TeamsColor.GetTeamNameFromColor(killerColorHex);
+            Plugin.RootDTO.LastKill.Victim.Name = victimNickname;
+            Plugin.RootDTO.LastKill.Victim.Team = TeamsColor.GetTeamNameFromColor(victimColorHex);
+            Plugin.RootDTO.LastKill.Victim.IsHeadshot = isHeadshot;
+            Plugin.RootDTO.LastKill.Victim.IsWallbang = isWallBang;
+            Plugin.RootDTO.LastKill.Victim.IsSmokeBang = isSmokeBang;
+            Plugin.RootDTO.LastKill.Victim.IsCollat = isCollat;
+            Plugin.RootDTO.LastKill.Killer.Weapon = (ItemId)usedWeapon;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"PlayerPatch@NetMessageSender_RPC_DisplaySpectatorKillConfirmationMessage");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
