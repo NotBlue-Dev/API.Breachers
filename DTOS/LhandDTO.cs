@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BreachersAPI.DTOS {
     public class LhandDTO {
-        public List<double> Pos { get; set; }
-        public List<double> Forward { get; set; }
-        public List<double> Left { get; set; }
-        public List<double> Up { get; set; }
+        public Vector3 Position { get; set; }
+        public Vector3 Forward { get; set; }
+        public Vector3 Right { get; set; }
+        public Vector3 Up { get; set; }
+        public Quaternion Rotation { get; set; }
     }
 }

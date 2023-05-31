@@ -12,8 +12,8 @@ namespace BreachersAPI.DTOS {
         public bool IsControllingBot { get; set; }
         public int Credits { get; set; }
         public int Health { get; set; } = 100;
-        public int CrouchPercent { get; set; }
-        public int FlashTimer { get; set; }
+        public float CrouchPercent { get; set; }
+        public bool IsFlashed { get; set; }
         public bool IsDroning { get; set; }
         public bool IsOutside { get; set; }
         public bool IsSprinting { get; set; }

@@ -47,6 +47,19 @@ public class GamePatch {
                     team.SetTeamStats();
                 }
             }
+            
+            //if (player in DTO but not in game) => remove from DTO
+            if(Plugin.RootDTO.Teams != null) {
+                foreach (TeamDTO team in Plugin.RootDTO.Teams) {
+                    if (team.Players != null) {
+                        foreach (PlayerDTO player in team.Players) {
+                            if(__instance.SyncedPlayerGameData.ToArray().FirstOrDefault(p => p.Name == player.Name) == null) {
+                                team.Players.Remove(player);
+                            }
+                        }
+                    }
+                }
+            }
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetGameData_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");

@@ -8,6 +8,7 @@ using Breachers.Networking;
 using BreachersAPI.DTOS.Utils;
 using Fusion;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BreachersAPI.Patches; 
 
@@ -87,7 +88,7 @@ public class PlayerPatch {
         }
     }
     
-    // ////// // //
+    // ////// // //OnPlayerStateChanged
     // FOOT STEP //
     // ////// // //
     [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnFootStepCounterChanged))]
@@ -109,6 +110,34 @@ public class PlayerPatch {
         }
     }
     
+    // ////// // //////
+    // PlAYER UPDATE //
+    // ////// // //////
+    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.FixedUpdateNetwork))]
+    [HarmonyPostfix]
+    public static void NetCharacter_FixedUpdateNetwork(NetCharacter __instance)
+    {
+        try
+        {
+            string playerName = __instance.NET_Nickname;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
+                .FirstOrDefault(p => p.Name == playerName);
+            if (existingPlayer != null)
+            {
+                existingPlayer.CrouchPercent = __instance.NET_CrouchPercent;
+                existingPlayer.IsDroning = __instance.NET_IsDroning;
+                existingPlayer.IsSprinting = __instance.NET_IsSprinting;
+                existingPlayer.IsCloacked = __instance.NET_IsCloaked;
+            }
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.LogError($"PlayerPatch@NetCharacter_FixedUpdateNetwork");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+
     // ////// // //
     //  OUTSIDE  //
     // ////// // //
@@ -155,9 +184,9 @@ public class PlayerPatch {
         }
     }
     
-    // ////////
-    // KILL  //
-    // ///////
+    // //////// ////
+    //  LAST KILL //
+    // //////// ////
     [HarmonyPatch(typeof(NetMessageSender), nameof(NetMessageSender.RPC_DisplaySpectatorKillConfirmationMessage))]
     [HarmonyPostfix]
     public static void RPC_DisplaySpectatorKillConfirmationMessage(
@@ -248,6 +277,20 @@ public class PlayerPatch {
                         team.Players.Add(newPlayer);
                     }
                     team.SetTeamStats();
+                }
+            }
+            
+            if(Plugin.RootDTO.Teams != null) {
+                foreach (TeamDTO team in Plugin.RootDTO.Teams) {
+                    if (team.Players != null) {
+                        foreach (PlayerDTO player in team.Players) {
+                            //remove player if not in game anymore SyncedPlayerGameData is a network array
+                            if (!netGameData.SyncedPlayerGameData.ToArray().Any(p => p.Name.ToString() == player.Name)) {
+                                team.Players.Remove(player);
+                            }
+                            
+                        }
+                    }
                 }
             }
         } catch (Exception ex) {
