@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Breachers;
 using Breachers.GameModes;
 using Breachers.GameModes.BombDefusal;
@@ -12,17 +13,22 @@ namespace BreachersAPI.DTOS {
         public bool ServerIsLocked { get; set; }
         public bool PrivateServer { get; set; }
         public string Map { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
         public Match.MatchTypes MatchType { get; set; }
         public int SpectatorCount { get; set; }
         public int PlayerCount { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
         public BombDefusalMatch.BombDefusalState GameStatusBombDefusalState { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
         public TeamDeathMatch.States GameStatusDeathMatch { get; set; }
         public float RoundTimer { get; set; }
         public string RoundTimer_Display => TimeSpan.FromSeconds(RoundTimer).ToString(@"mm\:ss");
         public float GlobalTimer { get; set; }
         public int ScoreEnforcers { get; set; }
         public int ScoreRevolters { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
         public Teams RoundWinner { get; set; } = Breachers.Teams.None;
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
         public BombDefusalMatch.RoundEndReason RoundEndReasonBombDefusalState { get; set; }
         public int PacketLoss { get; set; }
         public LastKillDTO LastKill { get; set; }

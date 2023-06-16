@@ -74,7 +74,7 @@ public class PlayerPatch {
             {
                 currentTeam?.Players.Remove(existingPlayer);
             }
-
+            
             if (currentTeam?.Players.Count == 0)
             {
                 currentTeam.Stats = new StatsDTO();

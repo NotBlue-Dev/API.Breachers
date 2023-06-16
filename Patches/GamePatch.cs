@@ -80,6 +80,24 @@ public class GamePatch {
         }
     }
     
+    // ////////// //
+    // MATCH TYPE //
+    // ////////// //
+    [HarmonyPatch(typeof(SpectatorActivePlayerStatus), nameof(SpectatorActivePlayerStatus.OnSwitchedSides))]
+    [HarmonyPrefix]
+    public static void SpectatorActivePlayerStatus_OnSwitchedSides(Teams team) {
+        try
+        {
+            foreach (var rootDtoTeam in Plugin.RootDTO.Teams)
+            {
+                rootDtoTeam.Players.Clear();
+            }
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@SpectatorActivePlayerStatus_OnSwitchedSides");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
     // ////////// ///
     // GLOBAL TIME //
     // ////////// //
@@ -102,6 +120,7 @@ public class GamePatch {
     public static void SpectatorScoreDisplay_UpdateScore(NetGameData netGameData) {
         try
         {
+            // TODO: get round number for the score win
             Plugin.RootDTO.ScoreRevolters = netGameData.SyncedTeamGameData[0].Score;
             Plugin.RootDTO.ScoreEnforcers = netGameData.SyncedTeamGameData[1].Score;
         } catch (Exception ex) {

@@ -26,4 +26,9 @@ public static class PlayerDTOUtils {
         dto.Stats.Defuses = player.Defuses;
         dto.Stats.Plants = player.Plants;
     }
+
+    public static void changeFlag(this PlayerDTO dto, bool flag)
+    {
+        dto.IsConnectedToTheGame = flag;
+    }
 }
