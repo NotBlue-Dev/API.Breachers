@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Breachers;
 using BreachersAPI.DTOS;
@@ -56,6 +57,7 @@ public class GamePatch {
                     } else {
                         PlayerDTO newPlayer = new PlayerDTO();
                         newPlayer.Head = new HeadDTO();
+                        newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(player);
                         team.Players.Add(newPlayer);
                     }

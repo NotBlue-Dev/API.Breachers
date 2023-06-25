@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BreachersAPI.DTOS;
 using BreachersAPI.Utils;
@@ -143,20 +144,36 @@ public class PlayerPatch {
     }
     
     // ////////////////// //
-    // BOMB DEFUSAL SPAWN //
+    // NETHAND EQUIPMENTS //
     // ////////////////// //
-    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnPlayerStateChanged))]
+    [HarmonyPatch(typeof(NetHand), nameof(NetHand.OnGrabbedObjectChanged))]
     [HarmonyPostfix]
-    public static void BombDefusalMatch_Spawned() {
+    public static void NetHand_OnGrabbedObjectChanged(Changed<NetHand> changed) {
         try
         {
-            Plugin.Log.LogInfo("state changed");
+            NetHand hand = changed.Behaviour;
+            string playerName = hand._netCharacter.NET_Nickname;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
+                .FirstOrDefault(p => p.Name == playerName);
+            if (existingPlayer != null)
+            {
+                existingPlayer.Equipments.Clear();
+                foreach (var equipment in hand._netCharacter._equipmentBelt._allSlots)
+                {
+                    if (equipment.NET_EquippedObject) {
+                        existingPlayer.Equipments.Add(equipment.NET_EquippedObject.ItemId.ToString());
+                    }
+                }
+            }
+            
             
         } catch (Exception ex) {
-            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"NetHand@OnGrabbedObjectChanged");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
+
 
     // ////// // //
     //  OUTSIDE  //
@@ -181,6 +198,38 @@ public class PlayerPatch {
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
+    
+    
+    // //////////////////
+    // BELT EQUIPMENTS //
+    // //////////////////
+    [HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.EquipmentInSlotChanged))]
+    [HarmonyPostfix]
+    public static void EquipmentSlot_EquipmentInSlotChanged(EquipmentSlot __instance) {
+        try
+        {
+            string playerName = __instance._netCharacter.NET_Nickname;
+
+            PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
+                .FirstOrDefault(p => p.Name == playerName);
+            if (existingPlayer != null)
+            {
+                existingPlayer.Equipments.Clear();
+                foreach (var equipment in __instance._netCharacter._equipmentBelt._allSlots)
+                {
+                    if (equipment.NET_EquippedObject) {
+                        existingPlayer.Equipments.Add(equipment.NET_EquippedObject.ItemId.ToString());
+                    }
+                }
+            }
+            
+            
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"EquipmentSlot@EquipmentInSlotChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
     
     // ////// ///// ///
     // VIRTUAL STOCK //
@@ -291,6 +340,7 @@ public class PlayerPatch {
                     } else {
                         PlayerDTO newPlayer = new PlayerDTO();
                         newPlayer.Head = new HeadDTO();
+                        newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(playerData);
                         team.Players.Add(newPlayer);
                     }

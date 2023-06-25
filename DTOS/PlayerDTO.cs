@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Breachers;
 
 namespace BreachersAPI.DTOS {
     public class PlayerDTO {
