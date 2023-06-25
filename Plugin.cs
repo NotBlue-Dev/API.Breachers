@@ -27,7 +27,7 @@ namespace BreachersAPI {
                     new TeamDTO() {
                         Team = Teams.Enforcers,
                         Stats = new StatsDTO(),
-                        Players = new List<PlayerDTO>()
+                        Players = new List<PlayerDTO>(),
                     },
                     new TeamDTO() {
                         Team = Teams.Revolters,

@@ -15,6 +15,23 @@ namespace BreachersAPI.Patches;
 
 public class GamePatch {
     
+    
+    // ///////////////
+    // SERVER STATUS //
+    // //////////////
+    [HarmonyPatch(typeof(NetPrivateServerData), nameof(NetPrivateServerData.Spawned))]
+    [HarmonyPostfix]
+    public static void NetCharacter_OnVirtualStockChanged(NetPrivateServerData __instance) {
+        try {
+            Plugin.RootDTO.ServerOwner = __instance.NET_ServerOwner.ToString();
+            Plugin.RootDTO.ServerIsLocked = __instance.NET_IsLocked;
+            Plugin.RootDTO.PrivateServer = __instance.NET_HasPassword;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"NetPrivateServerData_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
     // ////////////////// //
     // GENERAL GAME INFOS //
     // ////////////////// //
@@ -23,9 +40,6 @@ public class GamePatch {
     public static void NetGameData_Spawned(NetGameData __instance) {
         try {
             Plugin.RootDTO.ServerName = __instance.NET_ServerName.ToString();
-            Plugin.RootDTO.ServerOwner = __instance.NET_ServerOwner.ToString();
-            Plugin.RootDTO.ServerIsLocked = __instance.NET_IsLocked;
-            Plugin.RootDTO.PrivateServer = __instance.NET_HasPassword;
             Plugin.RootDTO.Map = __instance.NET_ActiveSceneName.ToString();
             Plugin.RootDTO.SpectatorCount = __instance.NET_SpectatorCount;
             Plugin.RootDTO.PlayerCount = __instance.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
@@ -41,6 +55,7 @@ public class GamePatch {
                         playerDTO.SetInfos(player);
                     } else {
                         PlayerDTO newPlayer = new PlayerDTO();
+                        newPlayer.Head = new HeadDTO();
                         newPlayer.SetInfos(player);
                         team.Players.Add(newPlayer);
                     }
@@ -148,6 +163,23 @@ public class GamePatch {
     }
     
     // ////////////////// //
+    // BOMB DEFUSAL SPAWN //
+    // ////////////////// //
+    [HarmonyPatch(typeof(BombDefusalMatch), nameof(BombDefusalMatch.Spawned))]
+    [HarmonyPostfix]
+    public static void BombDefusalMatch_Spawned(BombDefusalMatch __instance) {
+        try
+        {
+            Plugin.RootDTO.GameStatusBombDefusalState = __instance.NET_CurrentState;
+            Plugin.RootDTO.RoundEndReasonBombDefusalState = __instance.NET_RoundEndReason;
+            Plugin.RootDTO.RoundWinner = __instance.NET_RoundWinner;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+
+    // ////////////////// //
     //  DEATH MATCH STATE //
     // ////////////////// //
     [HarmonyPatch(typeof(TeamDeathMatch), nameof(TeamDeathMatch.OnClientStateChanged))]
@@ -158,6 +190,22 @@ public class GamePatch {
             TeamDeathMatch deathMatch = changed.Behaviour;
             Plugin.RootDTO.GameStatusDeathMatch = deathMatch.NET_CurrentState;
             Plugin.RootDTO.RoundWinner = deathMatch.NET_RoundWinner;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////////////// //
+    //  DEATH MATCH SPAWN //
+    // ////////////////// //
+    [HarmonyPatch(typeof(TeamDeathMatch), nameof(TeamDeathMatch.Spawned))]
+    [HarmonyPostfix]
+    public static void TeamDeathMatch_Spawned(TeamDeathMatch __instance) {
+        try
+        {
+            Plugin.RootDTO.GameStatusDeathMatch = __instance.NET_CurrentState;
+            Plugin.RootDTO.RoundWinner = __instance.NET_RoundWinner;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");

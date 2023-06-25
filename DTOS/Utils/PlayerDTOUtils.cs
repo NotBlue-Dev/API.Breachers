@@ -15,7 +15,7 @@ public static class PlayerDTOUtils {
         dto.IdTag = player.IdTag.ToString();
         dto.IsBot = player.IsBot;
         dto.IsDead = player.IsDead;
-        dto.IsControllingBot = player.IsControllingBot;
+        dto.IsControlledBot = player.IsControlledBot;
         dto.PingNumber = player.TeamCharacterID;
         dto.Credits = player.Credits;
         dto.Score = player.Score;

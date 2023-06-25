@@ -102,6 +102,10 @@ public class PlayerPatch {
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
+                Vector3 pos = player.Head.position;
+                existingPlayer.Head.X = pos.x;
+                existingPlayer.Head.Y = pos.y;
+                existingPlayer.Head.Z = pos.z;
                 existingPlayer.FootStepCounter = player.NET_FootStepCounter;
             }
         } catch (Exception ex) {
@@ -134,6 +138,22 @@ public class PlayerPatch {
         catch (Exception ex)
         {
             Plugin.Log.LogError($"PlayerPatch@NetCharacter_FixedUpdateNetwork");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ////////////////// //
+    // BOMB DEFUSAL SPAWN //
+    // ////////////////// //
+    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.OnPlayerStateChanged))]
+    [HarmonyPostfix]
+    public static void BombDefusalMatch_Spawned() {
+        try
+        {
+            Plugin.Log.LogInfo("state changed");
+            
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
@@ -247,7 +267,7 @@ public class PlayerPatch {
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
-    
+
     // ///////////// //
     // GLOBAL UPDATE //
     // ///////////// //
@@ -258,11 +278,8 @@ public class PlayerPatch {
         // Kills/Assists/Deaths 
         try {
             Plugin.RootDTO.ServerName = netGameData.NET_ServerName.ToString();
-            Plugin.RootDTO.ServerOwner = netGameData.NET_ServerOwner.ToString();
             Plugin.RootDTO.SpectatorCount = netGameData.NET_SpectatorCount;
             Plugin.RootDTO.Map = netGameData.NET_ActiveSceneName.ToString();
-            Plugin.RootDTO.PrivateServer = netGameData.NET_HasPassword;
-            Plugin.RootDTO.ServerIsLocked = netGameData.NET_IsLocked;
             Plugin.RootDTO.PlayerCount = netGameData.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
 
             foreach (PlayerSyncData playerData in netGameData.SyncedPlayerGameData) {
@@ -273,6 +290,7 @@ public class PlayerPatch {
                         player.SetInfos(playerData);
                     } else {
                         PlayerDTO newPlayer = new PlayerDTO();
+                        newPlayer.Head = new HeadDTO();
                         newPlayer.SetInfos(playerData);
                         team.Players.Add(newPlayer);
                     }
