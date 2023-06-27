@@ -33,5 +33,7 @@ namespace BreachersAPI.DTOS {
         public int PacketLoss { get; set; }
         public LastKillDTO LastKill { get; set; }
         public List<TeamDTO> Teams { get; set; }
+        
+        public SpectatorDTO Spectator { get; set; }
     }
 }

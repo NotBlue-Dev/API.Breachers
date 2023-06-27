@@ -41,9 +41,25 @@ public class GamePatch {
     // //////////////
     [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.KKOALBLGODE))]
     [HarmonyPostfix]
-    public static void CinemachineVirtualCamera_InternalUpdateCameraState(SpectatorController __instance) {
-        try {
-            Plugin.Log.LogInfo(__instance._freeFlightCamera._freeFlightCamera.transform.position.ToString());
+    public static void SpectatorController_KKOALBLGODE(SpectatorController __instance) {
+        try
+        {
+            Transform trans = __instance._freeFlightCamera._freeFlightCamera.transform;
+            Vector3 forward = trans.forward;
+            Vector3 up = trans.up;
+            Vector3 right = trans.right;
+            Quaternion rotation = trans.rotation;
+            Vector3 position = trans.position;
+            List<float> forwardList = new List<float> {forward.x, forward.y, forward.z};
+            List<float> upList = new List<float> {up.x, up.y, up.z, up.z};
+            List<float> rightList = new List<float> {right.x, right.y, right.z};    
+            List<float> rotationList = new List<float> {rotation.x, rotation.y, rotation.z, rotation.w};
+            List<float> positionList = new List<float> {position.x, position.y, position.z};
+            Plugin.RootDTO.Spectator.Forward = forwardList;
+            Plugin.RootDTO.Spectator.Up = upList;
+            Plugin.RootDTO.Spectator.Right = rightList;
+            Plugin.RootDTO.Spectator.Rotation = rotationList;
+            Plugin.RootDTO.Spectator.Position = positionList;
         } catch (Exception ex) {
             Plugin.Log.LogError($"SpectatorController_KKOALBLGODE");
             Plugin.Log.LogError($"Error while getting data: {ex}");

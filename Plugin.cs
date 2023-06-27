@@ -38,6 +38,13 @@ namespace BreachersAPI {
                 LastKill = new LastKillDTO() {
                     Killer = new KillerDTO(),
                     Victim = new VictimDTO()
+                },
+                Spectator = new SpectatorDTO() {
+                    Position = new List<float>(),
+                    Forward = new List<float>(),
+                    Right = new List<float>(),
+                    Up = new List<float>(),
+                    Rotation = new List<float>()
                 }
             };
         }

@@ -31,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Spec.Cinemachine.dll">
+      <HintPath>Assemblies\Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>Assemblies\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -57,9 +60,6 @@
     </Reference>
     <Reference Include="Fusion.Sockets">
       <HintPath>Assemblies\Fusion.Sockets.dll</HintPath>
-    </Reference>
-    <Reference Include="Cinemachine.dll">
-      <HintPath>Assemblies\Cinemachine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>Assemblies\UnityEngine.dll</HintPath>
