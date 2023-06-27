@@ -9,8 +9,11 @@ using Breachers.FX;
 using Breachers.GameModes;
 using Breachers.GameModes.BombDefusal;
 using Breachers.Networking;
+using Breachers.Obfuscation.Spectator;
+using Cinemachine;
 using Fusion;
 using HarmonyLib;
+using UnityEngine;
 
 namespace BreachersAPI.Patches; 
 
@@ -29,6 +32,20 @@ public class GamePatch {
             Plugin.RootDTO.PrivateServer = __instance.NET_HasPassword;
         } catch (Exception ex) {
             Plugin.Log.LogError($"NetPrivateServerData_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
+    // ///////////////
+    // SPEC CAM POS //
+    // //////////////
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.KKOALBLGODE))]
+    [HarmonyPostfix]
+    public static void CinemachineVirtualCamera_InternalUpdateCameraState(SpectatorController __instance) {
+        try {
+            Plugin.Log.LogInfo(__instance._freeFlightCamera._freeFlightCamera.transform.position.ToString());
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"SpectatorController_KKOALBLGODE");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
