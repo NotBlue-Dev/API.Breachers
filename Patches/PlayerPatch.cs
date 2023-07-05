@@ -103,10 +103,6 @@ public class PlayerPatch {
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
-                Vector3 pos = player.Head.position;
-                existingPlayer.Head.X = pos.x;
-                existingPlayer.Head.Y = pos.y;
-                existingPlayer.Head.Z = pos.z;
                 existingPlayer.FootStepCounter = player.NET_FootStepCounter;
             }
         } catch (Exception ex) {
@@ -130,6 +126,10 @@ public class PlayerPatch {
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
+                Vector3 pos = __instance.Head.position;
+                existingPlayer.Head.X = pos.x;
+                existingPlayer.Head.Y = pos.y;
+                existingPlayer.Head.Z = pos.z;
                 existingPlayer.CrouchPercent = __instance.NET_CrouchPercent;
                 existingPlayer.IsDroning = __instance.NET_IsDroning;
                 existingPlayer.IsSprinting = __instance.NET_IsSprinting;

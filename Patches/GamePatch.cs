@@ -39,9 +39,9 @@ public class GamePatch {
     // ///////////////
     // SPEC CAM POS //
     // //////////////
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.KKOALBLGODE))]
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.OLHFLJMBLGP))]
     [HarmonyPostfix]
-    public static void SpectatorController_KKOALBLGODE(SpectatorController __instance) {
+    public static void SpectatorController_OLHFLJMBLGP(SpectatorController __instance) {
         try
         {
             Transform trans = __instance._freeFlightCamera._freeFlightCamera.transform;
@@ -61,7 +61,7 @@ public class GamePatch {
             Plugin.RootDTO.Spectator.Rotation = rotationList;
             Plugin.RootDTO.Spectator.Position = positionList;
         } catch (Exception ex) {
-            Plugin.Log.LogError($"SpectatorController_KKOALBLGODE");
+            Plugin.Log.LogError($"SpectatorController_OLHFLJMBLGP");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
@@ -131,7 +131,7 @@ public class GamePatch {
     }
     
     // ////////// //
-    // MATCH TYPE //
+    // SWITCH SIDE //
     // ////////// //
     [HarmonyPatch(typeof(SpectatorActivePlayerStatus), nameof(SpectatorActivePlayerStatus.OnSwitchedSides))]
     [HarmonyPrefix]
@@ -148,6 +148,21 @@ public class GamePatch {
         }
     }
     
+    // ////////// // ///////
+    // SPECTATING PLAYER //
+    // ////////// ////////
+    
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.MMPEPABBPPL))]
+    [HarmonyPostfix]
+    public static void SpectatorScoreDisplay_OnMatchTypeChanged(NetCharacter NKPGPPKMEHK) {
+        try {
+            Plugin.RootDTO.Spectator.SpectatingPlayer = NKPGPPKMEHK.NET_Nickname;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+
     // ////////// ///
     // GLOBAL TIME //
     // ////////// //

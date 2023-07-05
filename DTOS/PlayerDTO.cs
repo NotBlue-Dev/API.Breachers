@@ -11,12 +11,11 @@ namespace BreachersAPI.DTOS {
         public int PingNumber { get; set; }
         public bool IsDead { get; set; }
         public bool IsBot { get; set; }
-        public bool IsConnectedToTheGame { get; set; } = true;
         public bool IsControlledBot { get; set; }
         public int Credits { get; set; }
         public int Health { get; set; } = 100;
         public float CrouchPercent { get; set; }
-        public bool IsFlashed { get; set; }
+        //public bool IsFlashed { get; set; }
         public bool IsDroning { get; set; }
         public bool IsOutside { get; set; }
         public bool IsSprinting { get; set; }

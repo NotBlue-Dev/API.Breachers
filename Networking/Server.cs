@@ -31,6 +31,11 @@ namespace BreachersAPI.Networking {
                         if (request.HttpMethod == "GET") {
                             response.StatusCode = 200;
                             response.ContentType = "application/json";
+                            
+                            response.Headers.Add("Access-Control-Allow-Origin", "*");
+                            response.Headers.Add("Access-Control-Allow-Methods", "GET");
+                            response.Headers.Add("Access-Control-Allow-Headers", "Content-Type");
+                            
                             string json = JsonSerializer.Serialize(Plugin.RootDTO);
                             byte[] buffer = Encoding.UTF8.GetBytes(json);
                             System.IO.Stream output = response.OutputStream;
