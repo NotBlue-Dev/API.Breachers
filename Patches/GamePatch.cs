@@ -39,7 +39,7 @@ public class GamePatch {
     // ///////////////
     // SPEC CAM POS //
     // //////////////
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.OLHFLJMBLGP))]
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.JEJDFILPJKI))]
     [HarmonyPostfix]
     public static void SpectatorController_OLHFLJMBLGP(SpectatorController __instance) {
         try
@@ -152,11 +152,11 @@ public class GamePatch {
     // SPECTATING PLAYER //
     // ////////// ////////
     
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.MMPEPABBPPL))]
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.DIHFANJBIJN))]
     [HarmonyPostfix]
-    public static void SpectatorScoreDisplay_OnMatchTypeChanged(NetCharacter NKPGPPKMEHK) {
+    public static void SpectatorScoreDisplay_OnMatchTypeChanged(NetCharacter POIGJLGCNGP) {
         try {
-            Plugin.RootDTO.Spectator.SpectatingPlayer = NKPGPPKMEHK.NET_Nickname;
+            Plugin.RootDTO.Spectator.SpectatingPlayer = POIGJLGCNGP.NET_Nickname;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
