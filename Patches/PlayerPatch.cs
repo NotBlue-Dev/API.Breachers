@@ -126,10 +126,22 @@ public class PlayerPatch {
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
-                Vector3 pos = __instance.Head.position;
-                existingPlayer.Head.X = pos.x;
-                existingPlayer.Head.Y = pos.y;
-                existingPlayer.Head.Z = pos.z;
+                Transform trans = __instance.Head.transform;
+                Vector3 forward = trans.forward;
+                Vector3 up = trans.up;
+                Vector3 right = trans.right;
+                Quaternion rotation = trans.rotation;
+                Vector3 position = trans.position;
+                List<float> forwardList = new List<float> {forward.x, forward.y, forward.z};
+                List<float> upList = new List<float> {up.x, up.y, up.z, up.z};
+                List<float> rightList = new List<float> {right.x, right.y, right.z};    
+                List<float> rotationList = new List<float> {rotation.x, rotation.y, rotation.z, rotation.w};
+                List<float> positionList = new List<float> {position.x, position.y, position.z};
+                existingPlayer.Head.Forward = forwardList;
+                existingPlayer.Head.Up = upList;
+                existingPlayer.Head.Right = rightList;
+                existingPlayer.Head.Rotation = rotationList;
+                existingPlayer.Head.Position = positionList;
                 existingPlayer.CrouchPercent = __instance.NET_CrouchPercent;
                 existingPlayer.IsDroning = __instance.NET_IsDroning;
                 existingPlayer.IsSprinting = __instance.NET_IsSprinting;

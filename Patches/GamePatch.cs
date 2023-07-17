@@ -41,10 +41,10 @@ public class GamePatch {
     // //////////////
     [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.JEJDFILPJKI))]
     [HarmonyPostfix]
-    public static void SpectatorController_OLHFLJMBLGP(SpectatorController __instance) {
+    public static void SpectatorController_JEJDFILPJKI(SpectatorController __instance) {
         try
         {
-            Transform trans = __instance._freeFlightCamera._freeFlightCamera.transform;
+            Transform trans = __instance._camera.transform;
             Vector3 forward = trans.forward;
             Vector3 up = trans.up;
             Vector3 right = trans.right;
@@ -152,16 +152,17 @@ public class GamePatch {
     // SPECTATING PLAYER //
     // ////////// ////////
     
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.DIHFANJBIJN))]
+    [HarmonyPatch(typeof(SpectatorActivePlayerStatus), nameof(SpectatorActivePlayerStatus.OnTargetChanged))]
     [HarmonyPostfix]
-    public static void SpectatorScoreDisplay_OnMatchTypeChanged(NetCharacter POIGJLGCNGP) {
+    public static void SpectatorActivePlayerStatus_OnTargetChanged(NetCharacter newCharacter) {
         try {
-            Plugin.RootDTO.Spectator.SpectatingPlayer = POIGJLGCNGP.NET_Nickname;
+            Plugin.RootDTO.Spectator.SpectatingPlayer = newCharacter.NET_Nickname;
         } catch (Exception ex) {
             Plugin.Log.LogError($"GamePatch@NetVoiceHandler_Spawned");
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
+     
 
     // ////////// ///
     // GLOBAL TIME //

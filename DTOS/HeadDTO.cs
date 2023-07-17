@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace BreachersAPI.DTOS {
     public class HeadDTO {
-        public float X { get; set; }
-        public float Y { get; set; }
-        public float Z { get; set; }
+        public List<float> Position { get; set; }
+        public List<float> Forward { get; set; }
+        public List<float> Right { get; set; }
+        public List<float> Up { get; set; }
+        public List<float> Rotation { get; set; }
     }
 }
