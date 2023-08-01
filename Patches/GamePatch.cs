@@ -92,7 +92,14 @@ public class GamePatch {
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(player);
-                        team.Players.Add(newPlayer);
+                        if (team.Players.Count >= 5)
+                        {
+                            team.Players = Extensions.ResetAndRefill(__instance.SyncedPlayerGameData);
+                        }
+                        else
+                        {
+                            team.Players.Add(newPlayer);
+                        }
                     }
                     team.SetTeamStats();
                 }

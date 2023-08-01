@@ -317,7 +317,6 @@ public class PlayerPatch {
                     // Si le joueur n'est pas dans la team, on le rajoute et on le supprime de l'ancienne team
                     if (!newTeam.Players.FirstOrDefault(p => p.Name == playerName).HasValue()) {
                         TeamDTO oldTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Players.Any(p => p.Name == existingPlayer.Name));
-                        
                         newTeam.Players.Add(existingPlayer);
                         oldTeam?.Players.Remove(existingPlayer);
                     }
@@ -354,7 +353,13 @@ public class PlayerPatch {
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(playerData);
-                        team.Players.Add(newPlayer);
+                        if (team.Players.Count >= 5)
+                        {
+                            team.Players = Extensions.ResetAndRefill(netGameData.SyncedPlayerGameData);                        }
+                        else
+                        {
+                            team.Players.Add(newPlayer);
+                        }
                     }
                     team.SetTeamStats();
                 }
