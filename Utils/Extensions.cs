@@ -16,13 +16,12 @@ public static class Extensions {
         return obj != null;
     }
 
-    public static List<PlayerDTO> ResetAndRefill(NetworkArray<PlayerSyncData> players)
+    public static List<PlayerDTO> ResetAndRefill(NetworkArray<PlayerSyncData> players, TeamDTO team)
     {
         var tempDTO = new List<PlayerDTO>();
         foreach (PlayerSyncData player in players)
         {
-            TeamDTO team = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Team == player.Team);
-            if (team.HasValue())
+            if (team.HasValue() && player.Team == team.Team)
             {
                 PlayerDTO newPlayer = new PlayerDTO();
                 newPlayer.Head = new HeadDTO();

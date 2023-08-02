@@ -92,9 +92,9 @@ public class GamePatch {
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(player);
-                        if (team.Players.Count >= 5)
+                        if (team.Players.Count > 5)
                         {
-                            team.Players = Extensions.ResetAndRefill(__instance.SyncedPlayerGameData);
+                            team.Players = Extensions.ResetAndRefill(__instance.SyncedPlayerGameData, team);
                         }
                         else
                         {

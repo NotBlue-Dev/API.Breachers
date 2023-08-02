@@ -114,19 +114,20 @@ public class PlayerPatch {
     // ////// // //////
     // PlAYER UPDATE //
     // ////// // //////
-    [HarmonyPatch(typeof(NetCharacter), nameof(NetCharacter.FixedUpdateNetwork))]
+    [HarmonyPatch(typeof(NetCharacterMovement), nameof(NetCharacterMovement.Render))]
     [HarmonyPostfix]
-    public static void NetCharacter_FixedUpdateNetwork(NetCharacter __instance)
+    public static void NetCharacter_FixedUpdateNetwork(NetCharacterMovement __instance)
     {
         try
         {
-            string playerName = __instance.NET_Nickname;
-
+            string playerName = __instance._netCharacter.NET_Nickname;
+            
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
                 .FirstOrDefault(p => p.Name == playerName);
+
             if (existingPlayer != null)
             {
-                Transform trans = __instance.Head.transform;
+                Transform trans = __instance._netCharacter.Head.transform;
                 Vector3 forward = trans.forward;
                 Vector3 up = trans.up;
                 Vector3 right = trans.right;
@@ -142,10 +143,10 @@ public class PlayerPatch {
                 existingPlayer.Head.Right = rightList;
                 existingPlayer.Head.Rotation = rotationList;
                 existingPlayer.Head.Position = positionList;
-                existingPlayer.CrouchPercent = __instance.NET_CrouchPercent;
-                existingPlayer.IsDroning = __instance.NET_IsDroning;
-                existingPlayer.IsSprinting = __instance.NET_IsSprinting;
-                existingPlayer.IsCloacked = __instance.NET_IsCloaked;
+                existingPlayer.CrouchPercent = __instance._netCharacter.NET_CrouchPercent;
+                existingPlayer.IsDroning = __instance._netCharacter.NET_IsDroning;
+                existingPlayer.IsSprinting = __instance._netCharacter.NET_IsSprinting;
+                existingPlayer.IsCloacked = __instance._netCharacter.NET_IsCloaked;
             }
         }
         catch (Exception ex)
@@ -353,9 +354,10 @@ public class PlayerPatch {
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
                         newPlayer.SetInfos(playerData);
-                        if (team.Players.Count >= 5)
+                        if (team.Players.Count > 5)
                         {
-                            team.Players = Extensions.ResetAndRefill(netGameData.SyncedPlayerGameData);                        }
+                            team.Players = Extensions.ResetAndRefill(netGameData.SyncedPlayerGameData, team);
+                        }
                         else
                         {
                             team.Players.Add(newPlayer);
@@ -383,4 +385,5 @@ public class PlayerPatch {
             Plugin.Log.LogError($"Error while getting data: {ex}");
         }
     }
+    
 }
