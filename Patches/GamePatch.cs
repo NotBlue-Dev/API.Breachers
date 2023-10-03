@@ -23,9 +23,9 @@ public class GamePatch {
     // ///////////////
     // SERVER STATUS //
     // //////////////
-    [HarmonyPatch(typeof(NetPrivateServerData), nameof(NetPrivateServerData.Spawned))]
+    [HarmonyPatch(typeof(NetCustomServerData), nameof(NetCustomServerData.Spawned))]
     [HarmonyPostfix]
-    public static void NetCharacter_OnVirtualStockChanged(NetPrivateServerData __instance) {
+    public static void NetCharacter_OnVirtualStockChanged(NetCustomServerData __instance) {
         try {
             Plugin.RootDTO.ServerOwner = __instance.NET_ServerOwner.ToString();
             Plugin.RootDTO.ServerIsLocked = __instance.NET_IsLocked;
@@ -39,7 +39,7 @@ public class GamePatch {
     // ///////////////
     // SPEC CAM POS //
     // //////////////
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.JEJDFILPJKI))]
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.EDDDBLMCJAL))]
     [HarmonyPostfix]
     public static void SpectatorController_JEJDFILPJKI(SpectatorController __instance) {
         try
