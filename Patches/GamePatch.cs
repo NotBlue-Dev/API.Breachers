@@ -39,7 +39,7 @@ public class GamePatch {
     // ///////////////
     // SPEC CAM POS //
     // //////////////
-    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.EDDDBLMCJAL))]
+    [HarmonyPatch(typeof(SpectatorController), nameof(SpectatorController.Update))]
     [HarmonyPostfix]
     public static void SpectatorController_JEJDFILPJKI(SpectatorController __instance) {
         try

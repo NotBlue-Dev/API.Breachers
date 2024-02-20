@@ -24,7 +24,6 @@ public class PlayerPatch {
         try {
             NetCharacter player = changed.Behaviour;
             string playerName = player.NET_Nickname;
-
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players).FirstOrDefault(p => p.Name == playerName);
             // Si on a bien le joueur dans notre liste des joueurs, on met à jour sa vie
             if (existingPlayer != null) {
@@ -273,9 +272,9 @@ public class PlayerPatch {
     [HarmonyPostfix]
     public static void RPC_DisplaySpectatorKillConfirmationMessage(
         PlayerRef spectator,
-        string killerColorHex,
         string killerNickname,
-        string victimColorHex,
+        Teams killerTeam,
+        Teams victimTeam,
         string victimNickname,
         int usedWeapon,
         bool isHeadshot,
@@ -285,9 +284,9 @@ public class PlayerPatch {
     {
         try {
             Plugin.RootDTO.LastKill.Killer.Name = killerNickname;
-            Plugin.RootDTO.LastKill.Killer.Team = TeamsColor.GetTeamNameFromColor(killerColorHex);
+            Plugin.RootDTO.LastKill.Killer.Team = killerTeam;
             Plugin.RootDTO.LastKill.Victim.Name = victimNickname;
-            Plugin.RootDTO.LastKill.Victim.Team = TeamsColor.GetTeamNameFromColor(victimColorHex);
+            Plugin.RootDTO.LastKill.Victim.Team = victimTeam;
             Plugin.RootDTO.LastKill.Victim.IsHeadshot = isHeadshot;
             Plugin.RootDTO.LastKill.Victim.IsWallbang = isWallBang;
             Plugin.RootDTO.LastKill.Victim.IsSmokeBang = isSmokeBang;

@@ -7,6 +7,7 @@ namespace BreachersAPI.DTOS {
         public string Name { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))] 
         public ItemId Weapon { get; set; }
-        public string Team { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
+        public Teams Team { get; set; }
     }
 }
