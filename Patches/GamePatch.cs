@@ -10,16 +10,17 @@ using Breachers.GameModes;
 using Breachers.GameModes.BombDefusal;
 using Breachers.Networking;
 using Breachers.Obfuscation.Spectator;
+using Breachers.Obfuscation.UI.Loading;
+using Breachers.Maps;
 using Cinemachine;
 using Fusion;
 using HarmonyLib;
 using UnityEngine;
 
-namespace BreachersAPI.Patches; 
+namespace BreachersAPI.Patches;
+
 
 public class GamePatch {
-    
-    
     // ///////////////
     // SERVER STATUS //
     // //////////////
@@ -66,6 +67,21 @@ public class GamePatch {
         }
     }
     
+    // /////////////////
+    // MAP INFORMATION //
+    // /////////////////
+    [HarmonyPatch(typeof(LoadingScreenVisuals), nameof(LoadingScreenVisuals.kklljlkjilllilkkijijlji))]
+    [HarmonyPostfix]
+    public static void NetLevelData_Spawned(LoadingScreenVisuals __instance, RuntimeMap iiilklljlkiiiijjlijljil,
+        bool ikjjiiillljjililjlkijkl) {
+        try {
+            Plugin.RootDTO.Map = __instance._mapText.text;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"NetLevelData_Spawned");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
     // ////////////////// //
     // GENERAL GAME INFOS //
     // ////////////////// //
@@ -74,7 +90,6 @@ public class GamePatch {
     public static void NetGameData_Spawned(NetGameData __instance) {
         try {
             Plugin.RootDTO.ServerName = __instance.NET_ServerName.ToString();
-            Plugin.RootDTO.Map = __instance.NET_ActiveSceneName.ToString();
             Plugin.RootDTO.SpectatorCount = __instance.NET_SpectatorCount;
             Plugin.RootDTO.PlayerCount = __instance.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
             Plugin.Log.LogInfo(__instance.SyncedTeamGameData.ToString());
@@ -88,12 +103,15 @@ public class GamePatch {
                     if (playerDTO.HasValue()) {
                         playerDTO.SetInfos(player);
                     } else {
+                        Plugin.Log.LogInfo($"Adding new player: {player.Name.ToString()}");
                         PlayerDTO newPlayer = new PlayerDTO();
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
+                        newPlayer.Hands = new List<string>();
                         newPlayer.SetInfos(player);
                         if (team.Players.Count > 5)
                         {
+                            Plugin.Log.LogInfo($"Resetting and refilling team: {team.Team}");
                             team.Players = Extensions.ResetAndRefill(__instance.SyncedPlayerGameData, team);
                         }
                         else
@@ -109,10 +127,17 @@ public class GamePatch {
             if(Plugin.RootDTO.Teams != null) {
                 foreach (TeamDTO team in Plugin.RootDTO.Teams) {
                     if (team.Players != null) {
+                        var playersToRemove = new List<PlayerDTO>();
+
                         foreach (PlayerDTO player in team.Players) {
-                            if(__instance.SyncedPlayerGameData.ToArray().FirstOrDefault(p => p.Name == player.Name) == null) {
-                                team.Players.Remove(player);
+                            if (__instance.SyncedPlayerGameData.ToArray().FirstOrDefault(p => p.Name == player.Name) == null) {
+                                playersToRemove.Add(player);
                             }
+                        }
+
+                        foreach (PlayerDTO player in playersToRemove) {
+                            Plugin.Log.LogInfo($"Removing player: {player.Name} from team: {team.Team}");
+                            team.Players.Remove(player);
                         }
                     }
                 }
@@ -170,11 +195,24 @@ public class GamePatch {
         }
     }
      
-
+    // ////////// /// ///////
+    // SPECTATE CHANGED //
+    // ////////// // ///////
+    [HarmonyPatch(typeof(SpectatorActivePlayerStatus), nameof(SpectatorActivePlayerStatus.SpectatorModeSwitched))]
+    [HarmonyPostfix]
+    public static void SpectatorActivePlayerStatus_OnModeChanged(SpectatorCameraBase mode) {
+        try {
+            Plugin.RootDTO.Spectator.CameraMode = mode.name;
+        } catch (Exception ex) {
+            Plugin.Log.LogError($"SpectatorActivePlayerStatus@SpectatorActivePlayerStatus_OnModeChanged");
+            Plugin.Log.LogError($"Error while getting data: {ex}");
+        }
+    }
+    
     // ////////// ///
     // GLOBAL TIME //
     // ////////// //
-    [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.SetRoundProgress))]
+    [HarmonyPatch(typeof(SpectatorScoreDisplay), nameof(SpectatorScoreDisplay.Update))]
     [HarmonyPostfix]
     public static void SpectatorScoreDisplay_SetRoundProgress(SpectatorScoreDisplay __instance) {
         try {

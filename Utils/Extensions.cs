@@ -26,6 +26,7 @@ public static class Extensions {
                 PlayerDTO newPlayer = new PlayerDTO();
                 newPlayer.Head = new HeadDTO();
                 newPlayer.Equipments = new List<string>();
+                newPlayer.Hands = new List<string>();
                 newPlayer.SetInfos(player);
                 tempDTO.Add(newPlayer);
             }

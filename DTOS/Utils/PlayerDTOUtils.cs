@@ -1,4 +1,5 @@
-﻿using Breachers.Networking;
+﻿using Breachers.GameModes;
+using Breachers.Networking;
 
 namespace BreachersAPI.DTOS.Utils; 
 
@@ -23,7 +24,8 @@ public static class PlayerDTOUtils {
         dto.Stats.Kills = player.Kills;
         dto.Stats.Deaths = player.Deaths;
         dto.Stats.Assists = player.Assists;
-        dto.Stats.Defuses = player.Defuses;
-        dto.Stats.Plants = player.Plants;
+        //dto.Stats.Defuses = datas.Defuses;
+        //dto.Stats.Plants = datas.Plants;
+
     }
 }

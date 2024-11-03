@@ -35,5 +35,6 @@ namespace BreachersAPI.DTOS {
         public List<TeamDTO> Teams { get; set; }
         
         public SpectatorDTO Spectator { get; set; }
+        
     }
 }

@@ -8,6 +8,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using System.Collections.Generic;
 using Breachers;
+using Breachers.GameModes;
 using MethodBase = System.Reflection.MethodBase;
 
 namespace BreachersAPI {
@@ -16,12 +17,13 @@ namespace BreachersAPI {
         internal static RootDTO RootDTO;
         internal static ObjManager objManager;
         internal new static ManualLogSource Log;
+        internal static PlayerMatchData[] PrevRoundData;
         private readonly Server server;
 
         public Plugin() {
             server = new Server();
             objManager = new ObjManager();
-            
+            PrevRoundData = null;
             RootDTO = new RootDTO {
                 Teams = new List<TeamDTO>() {
                     new TeamDTO() {

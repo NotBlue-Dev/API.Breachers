@@ -21,6 +21,8 @@ namespace BreachersAPI.DTOS {
         public bool IsSprinting { get; set; }
         public bool IsCloacked { get; set; }
         public List<string> Equipments { get; set; }
+        
+        public List<string> Hands { get; set; }
         public int FootStepCounter { get; set; }
         public bool UsingVirtualStock { get; set; }
         public StatsDTO Stats { get; set; }

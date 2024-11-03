@@ -73,12 +73,14 @@ public class PlayerPatch {
             if (existingPlayer != null)
             {
                 currentTeam?.Players.Remove(existingPlayer);
+                Plugin.Log.LogInfo($"Player despawned: {playerName}, removing from team.");
             }
             
             if (currentTeam?.Players.Count == 0)
             {
                 currentTeam.Stats = new StatsDTO();
                 currentTeam.Players.Clear();
+                Plugin.Log.LogInfo($"Current team player count: {currentTeam?.Players.Count}");
             }
         }
         catch (Exception ex)
@@ -158,24 +160,20 @@ public class PlayerPatch {
     // ////////////////// //
     // NETHAND EQUIPMENTS //
     // ////////////////// //
-    [HarmonyPatch(typeof(NetHand), nameof(NetHand.OnGrabbedObjectChanged))]
+    [HarmonyPatch(typeof(NetHand), nameof(NetHand.EquipmentInHandChanged))]
     [HarmonyPostfix]
-    public static void NetHand_OnGrabbedObjectChanged(Changed<NetHand> changed) {
+    public static void NetHand_OnGrabbedObjectChanged(NetHand __instance) {
         try
         {
-            NetHand hand = changed.Behaviour;
-            string playerName = hand._netCharacter.NET_Nickname;
+            string playerName = __instance._netCharacter.NET_Nickname;
 
             PlayerDTO existingPlayer = Plugin.RootDTO.Teams.SelectMany(team => team.Players)
                 .FirstOrDefault(p => p.Name == playerName);
             if (existingPlayer != null)
             {
-                existingPlayer.Equipments.Clear();
-                foreach (var equipment in hand._netCharacter._equipmentBelt._allSlots)
-                {
-                    if (equipment.NET_EquippedObject) {
-                        existingPlayer.Equipments.Add(equipment.NET_EquippedObject.ItemId.ToString());
-                    }
+                existingPlayer.Hands.Clear();
+                if (__instance.NET_GrabbedObject) {
+                    existingPlayer.Hands.Add(__instance.NET_GrabbedObject.ItemId.ToString());
                 }
             }
             
@@ -268,30 +266,21 @@ public class PlayerPatch {
     // //////// ////
     //  LAST KILL //
     // //////// ////
-    [HarmonyPatch(typeof(NetMessageSender), nameof(NetMessageSender.RPC_DisplaySpectatorKillConfirmationMessage))]
+    [HarmonyPatch(typeof(NetMessageSender), nameof(NetMessageSender.RPC_DisplaySpectatorKillFeedMessage))]
     [HarmonyPostfix]
-    public static void RPC_DisplaySpectatorKillConfirmationMessage(
-        PlayerRef spectator,
-        string killerNickname,
-        Teams killerTeam,
-        Teams victimTeam,
-        string victimNickname,
-        int usedWeapon,
-        bool isHeadshot,
-        bool isWallBang,
-        bool isSmokeBang,
-        bool isCollat)
+    public static void RPC_DisplaySpectatorKillFeedMessage(PlayerRef spectator, string killerNickname, Teams killerTeam, string victimNickname, Teams victimTeam, int usedWeapon, bool isHeadshot, bool isWallBang, bool isSmokeBang, bool isCollat)
     {
         try {
             Plugin.RootDTO.LastKill.Killer.Name = killerNickname;
             Plugin.RootDTO.LastKill.Killer.Team = killerTeam;
             Plugin.RootDTO.LastKill.Victim.Name = victimNickname;
-            Plugin.RootDTO.LastKill.Victim.Team = victimTeam;
-            Plugin.RootDTO.LastKill.Victim.IsHeadshot = isHeadshot;
-            Plugin.RootDTO.LastKill.Victim.IsWallbang = isWallBang;
+            Plugin.RootDTO.LastKill.Victim.Team = victimTeam; 
+            Plugin.RootDTO.LastKill.Victim.IsHeadshot = isHeadshot; 
+            Plugin.RootDTO.LastKill.Victim.IsWallbang = isWallBang; 
             Plugin.RootDTO.LastKill.Victim.IsSmokeBang = isSmokeBang;
             Plugin.RootDTO.LastKill.Victim.IsCollat = isCollat;
             Plugin.RootDTO.LastKill.Killer.Weapon = (ItemId)usedWeapon;
+
         } catch (Exception ex) {
             Plugin.Log.LogError($"PlayerPatch@NetMessageSender_RPC_DisplaySpectatorKillConfirmationMessage");
             Plugin.Log.LogError($"Error while getting data: {ex}");
@@ -316,8 +305,10 @@ public class PlayerPatch {
                 if (newTeam.HasValue()) {
                     // Si le joueur n'est pas dans la team, on le rajoute et on le supprime de l'ancienne team
                     if (!newTeam.Players.FirstOrDefault(p => p.Name == playerName).HasValue()) {
+                        Plugin.Log.LogInfo($"Player team changed: {playerName} to team {playerTeam}");
                         TeamDTO oldTeam = Plugin.RootDTO.Teams.FirstOrDefault(t => t.Players.Any(p => p.Name == existingPlayer.Name));
                         newTeam.Players.Add(existingPlayer);
+                        Plugin.Log.LogInfo($"Player removing ${playerName} from team.");
                         oldTeam?.Players.Remove(existingPlayer);
                     }
                 }
@@ -339,7 +330,6 @@ public class PlayerPatch {
         try {
             Plugin.RootDTO.ServerName = netGameData.NET_ServerName.ToString();
             Plugin.RootDTO.SpectatorCount = netGameData.NET_SpectatorCount;
-            Plugin.RootDTO.Map = netGameData.NET_ActiveSceneName.ToString();
             Plugin.RootDTO.PlayerCount = netGameData.SyncedPlayerGameData.ToArray().Count(p => !p.IsBot);
 
             foreach (PlayerSyncData playerData in netGameData.SyncedPlayerGameData) {
@@ -349,9 +339,11 @@ public class PlayerPatch {
                     if (player.HasValue()) {
                         player.SetInfos(playerData);
                     } else {
+                        Plugin.Log.LogInfo($"Adding new player: {playerData?.Name.ToString()}");
                         PlayerDTO newPlayer = new PlayerDTO();
                         newPlayer.Head = new HeadDTO();
                         newPlayer.Equipments = new List<string>();
+                        newPlayer.Hands = new List<string>();
                         newPlayer.SetInfos(playerData);
                         if (team.Players.Count > 5)
                         {
@@ -369,12 +361,19 @@ public class PlayerPatch {
             if(Plugin.RootDTO.Teams != null) {
                 foreach (TeamDTO team in Plugin.RootDTO.Teams) {
                     if (team.Players != null) {
+                        List<PlayerDTO> playersToRemove = new List<PlayerDTO>();
+
                         foreach (PlayerDTO player in team.Players) {
-                            //remove player if not in game anymore SyncedPlayerGameData is a network array
+                            // Mark player for removal if not in game anymore SyncedPlayerGameData is a network array
                             if (!netGameData.SyncedPlayerGameData.ToArray().Any(p => p.Name.ToString() == player.Name)) {
-                                team.Players.Remove(player);
+                                playersToRemove.Add(player);
                             }
-                            
+                        }
+
+                        // Remove players outside the enumeration loop
+                        foreach (PlayerDTO playerToRemove in playersToRemove) {
+                            Plugin.Log.LogInfo($"Player removing ${playerToRemove?.Name} from team.");
+                            team.Players.Remove(playerToRemove);
                         }
                     }
                 }

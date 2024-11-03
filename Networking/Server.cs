@@ -1,11 +1,13 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Text.Json;
 
 namespace BreachersAPI.Networking {
     public class Server {
-        private const string API_URL = "http://localhost:7821/";
+        private string API_URL = $"http://localhost:7821/";
         private readonly HttpListener listener;
         private Thread serverThread;
 

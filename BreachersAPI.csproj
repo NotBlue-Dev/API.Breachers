@@ -7,7 +7,7 @@
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
-    <BaseOutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins</BaseOutputPath>
+    <BaseOutputPath>C:\Program Files (x86)\Steam\steamapps\common\Breachers\BepInEx\plugins</BaseOutputPath>
     <RootNamespace>BreachersAPI</RootNamespace>
     <Company />
     <Product>BreachersAPI</Product>
@@ -16,11 +16,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\</OutputPath>
+    <OutputPath>C:\Program Files (x86)\Steam\steamapps\common\Breachers\BepInEx\plugins\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>C:\Program Files\Oculus\Software\Software\triangle-factory-breachers\BepInEx\plugins\</OutputPath>
+    <OutputPath>C:\Program Files (x86)\Steam\steamapps\common\Breachers\BepInEx\plugins\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -79,6 +79,9 @@
 	  <Reference Include="UnityEngine.UI">
 	    <HintPath>Assemblies\UnityEngine.UI.dll</HintPath>
 	  </Reference>
+    <Reference Include="TriangleFactory.UI">
+      <HintPath>Assemblies\TriangleFactory.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
